@@ -1,12 +1,11 @@
 package ar.com.caeldev.bsacore.dao
 
 import ar.com.caeldev.bsacore.serializer.{BsonSerializer, Serializer}
-import ar.com.caeldev.bsacore.domain.Role
 import com.mongodb.DBObject
 
-trait MongoDaoImpl[T] extends GenericDao[T] {
+class MongoDaoImpl[T <: AnyRef](implicit mot: Manifest[T]) extends GenericDao[T] {
 
-  val serializer: Serializer[Role, DBObject] = new BsonSerializer[Role]
+  val serializer: Serializer[T, DBObject] = new BsonSerializer[T]
 
   def findAll(): List[T] = ???
 
@@ -14,6 +13,5 @@ trait MongoDaoImpl[T] extends GenericDao[T] {
 
   def remove(entity: T) {}
 
-  def findById(id: Long): T = ???
-
+  def findById(id: Serializable): T = ???
 }
