@@ -34,6 +34,19 @@ class ConfigContextSuite extends FunSpec with GivenWhenThen {
         val value: String = config.get("db1.port")
       }
     }
+
+    it("should fail trying to get a value with a key using a wrong conf filename") {
+      Given("a wrong conf file")
+      val fileName: String = "test1.conf"
+
+      When("a ConfigContext instance using the a wrong conf file")
+      val config: ConfigContext = new ConfigContext(fileName)
+
+      Then("get a value using an invalid key it raise ConfigException")
+      intercept[com.typesafe.config.ConfigException] {
+        val value: String = config.get("db.port")
+      }
+    }
   }
 
 

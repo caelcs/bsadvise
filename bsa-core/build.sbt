@@ -17,6 +17,7 @@ libraryDependencies ++= Seq(
   "com.novus" %% "salat" % "1.9.2-SNAPSHOT",
   "org.scalatest" % "scalatest_2.10" % "1.9.1" % "test",
   "joda-time" % "joda-time" % "2.2",
-  "com.typesafe" % "config" % "1.0.0"
+  "com.typesafe" % "config" % "1.0.0",
+  "org.slf4j" % "slf4j-simple" % "1.7.5"
 )
 
