@@ -27,4 +27,4 @@ Advise to a group of persons about your absence by any way. eg: sms, whatsapp me
 ###Snapshot
 ## Snapshot
 
-[![Build Status](https://secure.travis-ci.org/novus/salat.png)](http://travis-ci.org/novus/salat)  Available for Scala 2.9.1, 2.9.2 and 2.10. Based om Casbah 2.5.0.
+[![Build Status](https://travis-ci.org/caelwinner/bsadvise.png?branch=master)](https://travis-ci.org/caelwinner/bsadvise)  Available for Scala 2.9.1, 2.9.2 and 2.10. Based om Casbah 2.5.0.
