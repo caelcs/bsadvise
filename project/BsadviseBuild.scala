@@ -26,9 +26,9 @@ object BsadviseBuild extends Build {
   import BuildSettings._
 
   val testDeps = Seq(scalatest)
-  val coreDeps = Seq(casbah, json4sNative, json4sMongo, jodaTime, slf4jApi, slf4jSimple) ++ testDeps
+  val coreDeps = Seq(casbah, json4sNative, json4sMongo, jodaTime, slf4jApi, slf4jSimple, salat, config) ++ testDeps
 
-  lazy val salat = Project(
+  lazy val bsadvise = Project(
     id = "bsadvise",
     base = file("."),
     settings = buildSettings ++ Seq(
@@ -40,7 +40,7 @@ object BsadviseBuild extends Build {
   ) dependsOn(bsacore)
 
   lazy val bsacore = Project(
-    id = "bsacore",
+    id = "bsa-core",
     base = file("bsa-core"),
     settings = buildSettings ++ Seq(libraryDependencies ++= coreDeps)
   )
@@ -60,7 +60,7 @@ object BuildSettings {
     scalaVersion := buildScalaVersion,
     shellPrompt := ShellPrompt.buildShellPrompt,
     parallelExecution in Test := false,
-    testFrameworks += TestFrameworks.Specs2,
+    testFrameworks += TestFrameworks.ScalaTest,
     resolvers ++= Seq(typeSafeRepo, typeSafeSnapsRepo, oss, ossSnaps),
     scalacOptions ++= Seq("-deprecation", "-unchecked"),
     crossScalaVersions := Seq("2.9.1", "2.9.2", "2.10.0")
