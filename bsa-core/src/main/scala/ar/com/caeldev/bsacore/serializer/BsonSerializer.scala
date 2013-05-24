@@ -4,7 +4,6 @@ import com.novus.salat.global._
 import com.novus.salat._
 import com.mongodb.casbah.Imports._
 
-
 class BsonSerializer[T <: AnyRef](implicit mot: Manifest[T]) extends Serializer[T, DBObject] {
 
   def serialize(entity: T): DBObject = {

@@ -1,6 +1,6 @@
 name := "bsa-core"
 
-version := "0.1"
+version := "0.1.0"
 
 scalaVersion := "2.10.0"
 
@@ -11,7 +11,7 @@ resolvers ++= Seq(
 )
 
 libraryDependencies ++= Seq(
-  "org.mongodb" %% "casbah" % "2.6.0",
+  "org.mongodb" %% "casbah" % "2.6.1",
   "org.json4s" %% "json4s-native" % "3.2.4",
   "org.json4s" %% "json4s-mongo" % "3.2.4",
   "com.novus" %% "salat" % "1.9.2-SNAPSHOT",

@@ -1,6 +1,6 @@
 package ar.com.caeldev.bsacore.config
 
-import org.scalatest.{GivenWhenThen, FunSpec}
+import org.scalatest.{ GivenWhenThen, FunSpec }
 
 class ConfigContextSuite extends FunSpec with GivenWhenThen {
 
@@ -48,6 +48,5 @@ class ConfigContextSuite extends FunSpec with GivenWhenThen {
       }
     }
   }
-
 
 }

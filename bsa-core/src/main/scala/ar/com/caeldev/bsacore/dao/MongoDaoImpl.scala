@@ -1,6 +1,6 @@
 package ar.com.caeldev.bsacore.dao
 
-import ar.com.caeldev.bsacore.serializer.{BsonSerializer, Serializer}
+import ar.com.caeldev.bsacore.serializer.{ BsonSerializer, Serializer }
 import com.mongodb.DBObject
 
 class MongoDaoImpl[T <: AnyRef](implicit mot: Manifest[T]) extends GenericDao[T] {

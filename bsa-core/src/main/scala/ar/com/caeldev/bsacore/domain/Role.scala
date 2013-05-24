@@ -1,10 +1,8 @@
 package ar.com.caeldev.bsacore.domain
 
 case class Role(
-                 id: Long,
-                 description: String
-                 )
-
+  id: Long,
+  description: String)
 
 object Role {
 

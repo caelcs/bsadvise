@@ -1,6 +1,6 @@
 package ar.com.caeldev.bsacore.serializer
 
-import org.scalatest.{FunSpec, GivenWhenThen}
+import org.scalatest.{ FunSpec, GivenWhenThen }
 import ar.com.caeldev.bsacore.domain.Role
 import com.mongodb.casbah.Imports._
 
@@ -16,7 +16,7 @@ class BsonSerializerSuite extends FunSpec with GivenWhenThen {
       val serializer: BsonSerializer[Role] = new BsonSerializer[Role]()
 
       When("invoke the serialize method")
-      val result:DBObject = serializer.serialize(newRole)
+      val result: DBObject = serializer.serialize(newRole)
 
       Then("the result must contains the field id")
       assert(result.containsField("id"))
@@ -34,13 +34,13 @@ class BsonSerializerSuite extends FunSpec with GivenWhenThen {
       Given("a DBObject instance")
       val newRole: Role = new Role(1, "Test")
       val serializer: BsonSerializer[Role] = new BsonSerializer[Role]()
-      val source:DBObject = serializer.serialize(newRole)
+      val source: DBObject = serializer.serialize(newRole)
 
       And("a Bson Serializer instance")
       val deserializer: BsonSerializer[Role] = new BsonSerializer[Role]()
 
       When("invoke the deserialize method")
-      val result:Role = deserializer.deserialize(source)
+      val result: Role = deserializer.deserialize(source)
 
       Then("must have the correct id and description value")
       assert(result.id === 1)
