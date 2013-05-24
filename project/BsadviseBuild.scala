@@ -137,6 +137,7 @@ object Dependencies {
   val casbah = "org.mongodb" %% "casbah" % "2.6.1"
   val json4sNative = "org.json4s" %% "json4s-native" % "3.2.4"
   val json4sMongo = "org.json4s" %% "json4s-mongo" % "3.2.4"
+
 }
 
 object Repos {
