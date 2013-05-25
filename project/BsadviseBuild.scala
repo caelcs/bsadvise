@@ -63,7 +63,7 @@ object BuildSettings {
     testFrameworks += TestFrameworks.ScalaTest,
     resolvers ++= Seq(typeSafeRepo, typeSafeSnapsRepo, oss, ossSnaps),
     scalacOptions ++= Seq("-deprecation", "-unchecked"),
-    crossScalaVersions := Seq("2.9.1", "2.9.2", "2.10.0")
+    crossScalaVersions := Seq("2.10.0")
   )
 }
 
