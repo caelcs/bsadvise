@@ -8,6 +8,16 @@ import com.mongodb.casbah.Imports._
 class DBConnectionSuite extends FunSpec with GivenWhenThen {
 
   describe("A DB Connection") {
+    it("should create a connection authenticated with a user a password") {
+      Given("a connection")
+      And("a user and password")
+      When("create a connection")
+      And("authenticate")
+      DBConnection.login("test", "password")
+
+      Then("it should be created successfully")
+      assert(DBConnection.conn.getVersion() != null)
+    }
     it("should create a connection to the Database for a given collection") {
       Given("a collection from Database")
       val collectionName: String = "test1"
