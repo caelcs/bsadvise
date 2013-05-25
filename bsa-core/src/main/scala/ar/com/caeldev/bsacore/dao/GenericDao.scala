@@ -4,9 +4,9 @@ trait GenericDao[T] {
 
   def findAll(): List[T]
 
-  def save(entity: T): T
+  def save(entity: T)
 
-  def remove(entity: T): Unit
+  def remove(entity: T)
 
   def findById(id: Serializable): T
 
