@@ -4,7 +4,7 @@ import ar.com.caeldev.bsacore.serializer.{ BsonSerializer, Serializer }
 import ar.com.caeldev.bsacore.db.DBConnection
 import com.mongodb.casbah.Imports._
 
-class MongoDaoImpl[T <: AnyRef](implicit mot: Manifest[T], collectionName: String) extends GenericDao[T] {
+class MongoDaoImpl[T <: AnyRef](implicit mot: Manifest[T]) extends GenericDao[T] {
 
   val serializer: Serializer[T, DBObject] = new BsonSerializer[T]
   val collection: MongoCollection = DBConnection.getCollection(mot.toString())
@@ -20,7 +20,7 @@ class MongoDaoImpl[T <: AnyRef](implicit mot: Manifest[T], collectionName: Strin
 
   def save(entity: T) = {
     val dbObject = serializer.serialize(entity)
-    collection ++ dbObject
+    collection += dbObject
   }
 
   def remove(entity: T) {
@@ -28,13 +28,12 @@ class MongoDaoImpl[T <: AnyRef](implicit mot: Manifest[T], collectionName: Strin
     collection.remove(dbObject)
   }
 
-  def findById(id: Serializable): T = {
+  def findById(id: Long): T = {
     val query = MongoDBObject("id" -> id)
-    var result: T = ???
+    var result: T = null.asInstanceOf[T]
     collection.find(query).foreach { x =>
       result = serializer.deserialize(x)
     }
     result
   }
-
 }

@@ -8,6 +8,6 @@ trait GenericDao[T] {
 
   def remove(entity: T)
 
-  def findById(id: Serializable): T
+  def findById(id: Long): T
 
 }
