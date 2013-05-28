@@ -1,8 +1,8 @@
 package ar.com.caeldev.bsacore.dao
 
-import org.scalatest.{ GivenWhenThen, FunSpec, FunSuite }
+import org.scalatest.{ GivenWhenThen, FunSpec }
 import ar.com.caeldev.bsacore.domain.Role
-import ar.com.caeldev.bsacore.db.DBConnection
+import com.mongodb.casbah.query.Imports._
 
 class MongoDaoImplSuite extends FunSpec with GivenWhenThen {
 
@@ -44,6 +44,43 @@ class MongoDaoImplSuite extends FunSpec with GivenWhenThen {
       And("should delete all the entities")
       dao.remove(role1)
       dao.remove(role2)
+    }
+
+    it("should return all the elements sorting by a criteria and with a limited size") {
+      Given("Several entities persisted")
+      val role1: Role = new Role(1001, "test1001")
+      val role2: Role = new Role(1002, "test1002")
+      val role3: Role = new Role(1003, "1003")
+      val role4: Role = new Role(1004, "1004")
+
+      val dao: MongoDaoImpl[Role] = new MongoDaoImpl[Role]()
+      dao.save(role1)
+      dao.save(role3)
+      dao.save(role2)
+      dao.save(role4)
+
+      And("a query")
+      val query: MongoDBObject = MongoDBObject("description" -> "test*".r)
+      And("sorted")
+      val sort: MongoDBObject = MongoDBObject("description" -> 1)
+      And("with a max size result")
+      val rows = 3
+
+      When("try to get the result of the query")
+      val result = dao.find(query, Some(sort), Some(rows))
+
+      Then("should contain only those result whom match with the given query")
+      result.foreach { x =>
+        assert(x.description.contains("test"))
+      }
+
+      And("should return less or equal to max size of result")
+      assert(result.size === 2)
+
+      dao.remove(role1)
+      dao.remove(role3)
+      dao.remove(role2)
+      dao.remove(role4)
     }
 
   }

@@ -35,6 +35,8 @@ class DBConnectionSuite extends FunSpec with GivenWhenThen {
       val cursor = collection.find(q).foreach { x =>
         assert(x("description") === "test")
       }
+      collection.remove(q)
+
     }
 
   }
