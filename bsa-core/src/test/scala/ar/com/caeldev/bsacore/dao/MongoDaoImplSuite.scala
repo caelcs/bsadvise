@@ -1,87 +1,122 @@
 package ar.com.caeldev.bsacore.dao
 
-import org.scalatest.{ GivenWhenThen, FunSpec }
+import org.scalatest.{ PropSpec, GivenWhenThen }
 import ar.com.caeldev.bsacore.domain.Role
 import com.mongodb.casbah.query.Imports._
+import org.scalatest.prop.TableDrivenPropertyChecks
+import org.scalatest.prop.Tables.Table
 
-class MongoDaoImplSuite extends FunSpec with GivenWhenThen {
+class MongoDaoImplSuite extends PropSpec with GivenWhenThen with TableDrivenPropertyChecks {
 
-  describe("A MongoDBDao") {
-    it("should save an entity to a database and be able to get it back") {
-      Given("an entity")
-      val role: Role = new Role(1000, "test1000")
-      And("a MongoDao")
-      val dao: GenericDao[Role] = new MongoDaoImpl[Role]()
+  val sampleSet1 =
+    Table(
+      "role",
+      new Role(1000, "test1000"))
 
-      When("persist it to the database")
-      dao.save(role)
-      And("get the entity from DB")
-      val entitySaved: Role = dao.findById(1000)
+  val sampleSet2 =
+    Table(
+      "role",
+      new Role(1001, "test1001"),
+      new Role(1002, "test1002"))
 
-      Then("it should be get from DB by a query")
-      assert(entitySaved.description === "test1000")
-      And("should be deleted successfully")
-      dao.remove(entitySaved)
-      val entityDeleted: Role = dao.findById(1000)
-      assert(entityDeleted === null)
+  val sampleSet3Match =
+    Table(
+      "role",
+      new Role(1000, "test1000"),
+      new Role(1001, "test1001"),
+      new Role(1002, "test1002"),
+      new Role(1001, "test1001"),
+      new Role(1002, "test1002"))
+
+  val sampleSet3Unmatch =
+    Table(
+      "role",
+      new Role(1003, "1003"),
+      new Role(1004, "1004"))
+
+  val sampleSet3Rows =
+    Table(
+      "rows",
+      3,
+      10,
+      20)
+
+  property("should save entity to a database and be able to get it back") {
+    forAll(sampleSet1) {
+      role =>
+        Given("a Mongo Dao")
+        And("an entity")
+        val dao: GenericDao[Role] = new MongoDaoImpl[Role]()
+
+        When("persist it to the database")
+        dao.save(role)
+
+        And("get the entity from DB")
+        val entitySaved: Role = dao.findById(role.id)
+
+        Then("it should be get from DB by a query")
+        assert(entitySaved.description === role.description)
+        And("should be deleted successfully")
+        dao.remove(entitySaved)
+    }
+  }
+
+  property("should get all the entities that have persisted from a collection") {
+    Given("a Mongo Dao")
+    And("a collections of entities")
+    val dao: GenericDao[Role] = new MongoDaoImpl[Role]()
+
+    When("persist all the entities")
+    forAll(sampleSet2) {
+      role =>
+        dao.save(role)
     }
 
-    it("should get all the entities from a collection") {
-      Given("two entities")
-      val role1: Role = new Role(1001, "test1001")
-      val role2: Role = new Role(1002, "test1002")
-      And("a MongoDao")
-      val dao: GenericDao[Role] = new MongoDaoImpl[Role]()
+    Then("should return all the entities from collection")
+    val result = dao.findAll()
+    assert(result.size === sampleSet2.size)
 
-      When("persist all the entities")
-      dao.save(role1)
-      dao.save(role2)
-
-      Then("should return all the entities from collection")
-      dao.findAll().foreach { x =>
-        assert(x.description.contains("test"))
-      }
-      And("should delete all the entities")
-      dao.remove(role1)
-      dao.remove(role2)
+    forAll(sampleSet2) {
+      role =>
+        dao.remove(role)
     }
+  }
 
-    it("should return all the elements sorting by a criteria and with a limited size") {
-      Given("Several entities persisted")
-      val role1: Role = new Role(1001, "test1001")
-      val role2: Role = new Role(1002, "test1002")
-      val role3: Role = new Role(1003, "1003")
-      val role4: Role = new Role(1004, "1004")
+  property("should return all the elements sorting by a criteria and with a limited size") {
+    forAll(sampleSet3Rows) {
+      rows =>
 
-      val dao: MongoDaoImpl[Role] = new MongoDaoImpl[Role]()
-      dao.save(role1)
-      dao.save(role3)
-      dao.save(role2)
-      dao.save(role4)
+        Given("a Mongo Dao")
+        val dao: MongoDaoImpl[Role] = new MongoDaoImpl[Role]()
 
-      And("a query")
-      val query: MongoDBObject = MongoDBObject("description" -> "test*".r)
-      And("sorted")
-      val sort: MongoDBObject = MongoDBObject("description" -> 1)
-      And("with a max size result")
-      val rows = 3
+        And("Several entities persisted")
+        forAll(sampleSet3Match ++ sampleSet3Unmatch) {
+          role =>
+            dao.save(role)
+        }
 
-      When("try to get the result of the query")
-      val result = dao.find(query, Some(sort), Some(rows))
+        And("a query")
+        val query: MongoDBObject = MongoDBObject("description" -> "test*".r)
+        And("with sort criteria")
+        val sort: MongoDBObject = MongoDBObject("description" -> 1)
+        And("with a max size result")
 
-      Then("should contain only those result whom match with the given query")
-      result.foreach { x =>
-        assert(x.description.contains("test"))
-      }
+        When("try to get the result using the query %s and sorting criteria %s and max result size of %d" format (query.toString(), sort.toString(), rows))
+        val result = dao.find(query, Some(sort), Some(rows))
 
-      And("should return less or equal to max size of result")
-      assert(result.size === 2)
+        Then("should contain only those result whom match with the given query")
+        result.foreach {
+          x =>
+            assert(x.description.contains("test"))
+        }
 
-      dao.remove(role1)
-      dao.remove(role3)
-      dao.remove(role2)
-      dao.remove(role4)
+        And("should return less or equal to max size of result")
+        assert(result.size <= rows)
+
+        forAll(sampleSet3Match ++ sampleSet3Unmatch) {
+          role =>
+            dao.remove(role)
+        }
     }
-
   }
 }
