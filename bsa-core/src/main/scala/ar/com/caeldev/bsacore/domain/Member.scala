@@ -6,7 +6,7 @@ case class ContactInfo(address: String)
 
 case class Member(
   id: Long,
-  role: Role,
+  role_id: Long,
   firstName: String,
   lastName: String,
   email: String,

@@ -5,5 +5,5 @@ import org.joda.time.DateTime
 case class MessageTemplate(
   id: Long,
   message: String,
-  createdBy: Member,
+  createdBy: Long,
   createdAt: DateTime)

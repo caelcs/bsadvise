@@ -4,8 +4,8 @@ import org.joda.time.DateTime
 
 case class Notification(
   id: Long,
-  sender: Member,
-  receivers: List[Member],
+  sender_id: Long,
+  receivers: List[Long],
   message: String,
   createdAt: DateTime,
   sentAt: DateTime)
