@@ -1,9 +1,16 @@
 package ar.com.caeldev.bsacore.dao
 
 import org.scalatest.{ PropSpec, GivenWhenThen }
-import ar.com.caeldev.bsacore.domain.Role
 import com.mongodb.casbah.query.Imports._
 import org.scalatest.prop.TableDrivenPropertyChecks
+import org.joda.time.DateTime
+import scala.Predef._
+import scala.Some
+import ar.com.caeldev.bsacore.domain._
+import ar.com.caeldev.bsacore.domain.Group
+import ar.com.caeldev.bsacore.domain.ContactInfo
+import scala.Some
+import ar.com.caeldev.bsacore.domain.Member
 
 class MongoDaoImplSuite extends PropSpec with GivenWhenThen with TableDrivenPropertyChecks {
 
@@ -40,24 +47,84 @@ class MongoDaoImplSuite extends PropSpec with GivenWhenThen with TableDrivenProp
       10,
       20)
 
-  property("should save entity to a database and be able to get it back") {
-    forAll(sampleSet1) {
-      role =>
-        Given("a Mongo Dao")
-        And("an entity")
-        val dao: GenericDao[Role] = new MongoDaoImpl[Role]()
+  property("should save a ROLE entity to a database and be able to get it back") {
+    Given("a Mongo Dao")
+    val dao: GenericDao[Role] = new MongoDaoImpl[Role]()
+    And("a Role entity")
+    val entity: Role = new Role(1000, "test1000")
 
-        When("persist it to the database")
-        dao.save(role)
+    When("persist it to the database")
+    dao.save(entity)
 
-        And("get the entity from DB")
-        val entitySaved: Role = dao.findById(role.id)
+    Then("it should be get from DB by a query")
+    assert(dao.findById(1000).id === 1000)
 
-        Then("it should be get from DB by a query")
-        assert(entitySaved.description === role.description)
-        And("should be deleted successfully")
-        dao.remove(entitySaved)
-    }
+    And("should be deleted successfully")
+    dao.remove(entity)
+  }
+
+  property("should save a MEMBER entity to a database and be able to get it back") {
+    Given("a Mongo Dao")
+    val dao: GenericDao[Member] = new MongoDaoImpl[Member]()
+    And("a MEMBER entity")
+    val entity: Member = new Member(1001, 1000, "Dido", "Tramp", "dido@gmail.com", new ContactInfo("Fake St. 123"), new DateTime(), new DateTime())
+
+    When("persist it to the database")
+    dao.save(entity)
+
+    Then("it should be get from DB by a query")
+    assert(dao.findById(1001).id === 1001)
+
+    And("should be deleted successfully")
+    dao.remove(entity)
+  }
+
+  property("should save a GROUP entity to a database and be able to get it back") {
+    Given("a Mongo Dao")
+    val dao: GenericDao[Group] = new MongoDaoImpl[Group]()
+    And("a GROUP entity")
+    val entity: Group = new Group(1002, "Avengers", List(1001))
+
+    When("persist it to the database")
+    dao.save(entity)
+
+    Then("it should be get from DB by a query")
+    assert(dao.findById(1002).id === 1002)
+
+    And("should be deleted successfully")
+    dao.remove(entity)
+  }
+
+  property("should save a NOTIFICATION entity to a database and be able to get it back") {
+    Given("a Mongo Dao")
+    val dao: GenericDao[Notification] = new MongoDaoImpl[Notification]()
+    And("a NOTIFICATION entity")
+    val entity: Notification = new Notification(1004, 1001, List(1001), "Hello", new DateTime(), new DateTime())
+
+    When("persist it to the database")
+    dao.save(entity)
+
+    Then("it should be get from DB by a query")
+    assert(dao.findById(1004).id === 1004)
+
+    And("should be deleted successfully")
+    dao.remove(entity)
+  }
+
+  property("should save a MESSAGE TEMPLATE entity to a database and be able to get it back") {
+    Given("a Mongo Dao")
+    val dao: GenericDao[MessageTemplate] = new MongoDaoImpl[MessageTemplate]()
+    And("a MESSAGE TEMPLATE entity")
+    val entity: MessageTemplate = new MessageTemplate(1005, "Hello", 1001, new DateTime())
+
+    When("persist it to the database")
+    dao.save(entity)
+
+    Then("it should be get from DB by a query")
+    assert(dao.findById(1005).id === 1005)
+
+    And("should be deleted successfully")
+    dao.remove(entity)
   }
 
   property("should get all the entities that have persisted from a collection") {

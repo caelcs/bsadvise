@@ -4,6 +4,7 @@ import ar.com.caeldev.bsacore.serializer.{ BsonSerializer, Serializer }
 import ar.com.caeldev.bsacore.db.DBConnection
 import com.mongodb.casbah.Imports._
 import com.mongodb.casbah.TypeImports.MongoCollection
+import ar.com.caeldev.bsacore.domain.Role
 
 class MongoDaoImpl[T <: AnyRef](implicit val mot: Manifest[T]) extends GenericDao[T] {
 

@@ -1,6 +1,6 @@
 package ar.com.caeldev.bsacore.domain
 
-case class Team(
+case class Group(
   id: Long,
   name: String,
   members: List[Long])
