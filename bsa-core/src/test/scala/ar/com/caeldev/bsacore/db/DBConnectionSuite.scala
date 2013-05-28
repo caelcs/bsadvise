@@ -9,19 +9,38 @@ class DBConnectionSuite extends FunSpec with GivenWhenThen {
 
   describe("A DB Connection") {
     it("should create a connection authenticated with a user a password") {
-      Given("a connection")
-      And("a user and password")
+      Given("an environment to be connect")
+      val env: String = "test"
       When("create a connection")
-      And("authenticate")
-      DBConnection.login("test", "password")
+      DBConnection.connectTo(env)
+      DBConnection.login(None, None)
 
       Then("it should be created successfully")
       assert(DBConnection.conn.getVersion() != null)
     }
+
+    it("should not create a connection given a environment who it doesn't exists") {
+      Given("an environment which doesn't exists")
+      val env: String = "wrong"
+      Then("should raise an exception")
+      intercept[java.lang.Exception] {
+        DBConnection.connectTo(env)
+        DBConnection.login(None, None)
+      }
+    }
+
     it("should create a connection to the Database for a given collection") {
-      Given("a collection from Database")
-      val collectionName: String = "test1"
-      val collection: MongoCollection = DBConnection.getCollection("test1")
+      Given("an environment to be connect")
+      val env: String = "test"
+      And("create a connection")
+      DBConnection.connectTo(env)
+      DBConnection.login(None, None)
+
+      And("a collection Name")
+      val collectionName: String = "test"
+
+      And("collection from Database based on collection name")
+      val collection: MongoCollection = DBConnection.getCollection(collectionName)
 
       And("with a sample data to persist")
       val serializer: BsonSerializer[Role] = new BsonSerializer[Role]()
@@ -32,7 +51,7 @@ class DBConnectionSuite extends FunSpec with GivenWhenThen {
 
       Then("the collection contains one element")
       val q = MongoDBObject("id" -> "1")
-      val cursor = collection.find(q).foreach { x =>
+      collection.find(q).foreach { x =>
         assert(x("description") === "test")
       }
       collection.remove(q)

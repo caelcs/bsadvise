@@ -5,9 +5,10 @@ import ar.com.caeldev.bsacore.db.DBConnection
 import com.mongodb.casbah.Imports._
 import com.mongodb.casbah.TypeImports.MongoCollection
 
-class MongoDaoImpl[T <: AnyRef](implicit mot: Manifest[T]) extends GenericDao[T] {
+class MongoDaoImpl[T <: AnyRef](implicit val mot: Manifest[T]) extends GenericDao[T] {
 
   val serializer: Serializer[T, DBObject] = new BsonSerializer[T]
+  DBConnection.connect()
   val collection: MongoCollection = DBConnection.getCollection(mot.toString())
 
   def findAll(): List[T] = {

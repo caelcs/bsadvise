@@ -22,4 +22,8 @@ class ConfigContext(config: Config) {
   def get(key: String): String = {
     config.getString(key)
   }
+
+  def exists(key: String): Boolean = {
+    config.hasPath(key)
+  }
 }

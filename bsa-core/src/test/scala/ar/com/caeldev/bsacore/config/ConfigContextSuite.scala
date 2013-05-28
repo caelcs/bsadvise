@@ -31,8 +31,30 @@ class ConfigContextSuite extends FunSpec with GivenWhenThen {
 
       When("get a value using an invalid key it raise ConfigException")
       intercept[com.typesafe.config.ConfigException] {
-        val value: String = config.get("db1.port")
+        config.get("db1.port")
       }
+    }
+
+    it("should evaluate if exists a valid key from a conf file") {
+      Given("a conf file")
+      val fileName: String = "test.conf"
+
+      And("a ConfigContext instance using the conf file")
+      val config: ConfigContext = new ConfigContext(fileName)
+
+      When("evaluate if exists a valid key success")
+      assert(config.exists("db"))
+    }
+
+    it("should evaluate if exists an invalid key from a conf file") {
+      Given("a conf file")
+      val fileName: String = "test.conf"
+
+      And("a ConfigContext instance using the conf file")
+      val config: ConfigContext = new ConfigContext(fileName)
+
+      When("evaluate if exists a invalid key fail")
+      assert(!config.exists("db1"))
     }
 
     it("should fail trying to get a value with a key using a wrong conf filename") {
@@ -42,9 +64,9 @@ class ConfigContextSuite extends FunSpec with GivenWhenThen {
       When("a ConfigContext instance using the a wrong conf file")
       val config: ConfigContext = new ConfigContext(fileName)
 
-      Then("get a value using an invalid key it raise ConfigException")
+      Then("get a value using an valid key it raise ConfigException")
       intercept[com.typesafe.config.ConfigException] {
-        val value: String = config.get("db.port")
+        config.get("db.port")
       }
     }
   }

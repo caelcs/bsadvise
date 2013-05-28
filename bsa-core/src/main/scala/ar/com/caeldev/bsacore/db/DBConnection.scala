@@ -1,29 +1,78 @@
 package ar.com.caeldev.bsacore.db
 
 import ar.com.caeldev.bsacore.config.ConfigContext
-import com.mongodb.casbah.{ MongoClient, MongoCollection, MongoConnection }
+import com.mongodb.casbah.{ MongoDB, MongoClient, MongoCollection }
 
 object DBConnection {
 
-  val configContext: ConfigContext = new ConfigContext("db")
+  val envConfigContext: ConfigContext = new ConfigContext("environments")
+  val appConfigContext: ConfigContext = new ConfigContext("app")
 
-  val dbServer = configContext.get("db.server")
-  val dbPort = configContext.get("db.port").toInt
-  val dbName = configContext.get("db.name")
-  val dbUser = configContext.get("db.user")
-  val dbPassword = configContext.get("db.password")
+  var dbServer: String = _
+  var dbPort: Int = _
+  var dbName: String = _
+  var dbUser: String = _
+  var dbPassword: String = _
 
-  val conn = MongoClient(dbServer, dbPort)
-  val db = conn(dbName)
+  var conn: MongoClient = _
+  var db: MongoDB = _
+
+  var isConnected = false
+  var isAuthenticated = false
 
   def getCollection(collectionName: String): MongoCollection = {
-    login(dbUser, dbPassword)
+    if (!isConnected) {
+      throw new Exception("There is no connection yet. Invoke connectTo method")
+    }
+    login(Some(dbUser), Some(dbPassword))
     val collection: MongoCollection = db(collectionName)
     collection
   }
 
-  def login(user: String, password: String) = {
-    db.authenticate(user, user)
+  def login(user: Option[String], password: Option[String]) = {
+    if (!isAuthenticated) {
+      var userTemp: String = dbUser
+      var passwordTemp: String = dbPassword
+
+      user match {
+        case Some(user) => userTemp = user
+        case None       => ()
+      }
+
+      password match {
+        case Some(password) => passwordTemp = password
+        case None           => ()
+      }
+
+      db.authenticate(userTemp, passwordTemp)
+      isAuthenticated = true
+    }
+  }
+
+  def validate(env: String) {
+    try {
+      envConfigContext.exists("environments."+env)
+    }
+    catch {
+      case e: Exception => throw new Exception("Environment configuration doesn't exists.", e)
+    }
+  }
+
+  def connectTo(environment: String) = {
+    validate(environment)
+    dbServer = envConfigContext.get("environments."+environment+".db.server")
+    dbPort = envConfigContext.get("environments."+environment+".db.port").toInt
+    dbName = envConfigContext.get("environments."+environment+".db.name")
+    dbUser = envConfigContext.get("environments."+environment+".db.user")
+    dbPassword = envConfigContext.get("environments."+environment+".db.password")
+    conn = MongoClient(dbServer, dbPort)
+    db = conn(dbName)
+    isConnected = true
+  }
+
+  def connect() = {
+    val env: String = appConfigContext.get("application.environment")
+    connectTo(env)
   }
 
 }

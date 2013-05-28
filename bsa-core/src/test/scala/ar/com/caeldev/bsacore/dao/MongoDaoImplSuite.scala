@@ -4,7 +4,6 @@ import org.scalatest.{ PropSpec, GivenWhenThen }
 import ar.com.caeldev.bsacore.domain.Role
 import com.mongodb.casbah.query.Imports._
 import org.scalatest.prop.TableDrivenPropertyChecks
-import org.scalatest.prop.Tables.Table
 
 class MongoDaoImplSuite extends PropSpec with GivenWhenThen with TableDrivenPropertyChecks {
 
