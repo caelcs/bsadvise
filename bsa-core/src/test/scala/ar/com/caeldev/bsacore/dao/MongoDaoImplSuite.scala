@@ -51,7 +51,7 @@ class MongoDaoImplSuite extends PropSpec with GivenWhenThen with TableDrivenProp
     Given("a Mongo Dao")
     val dao: GenericDao[Role] = new MongoDaoImpl[Role]()
     And("a Role entity")
-    val entity: Role = new Role(1000, "test1000")
+    val entity: Role = DomainSamples.roles(1000)
 
     When("persist it to the database")
     dao.save(entity)
@@ -67,7 +67,7 @@ class MongoDaoImplSuite extends PropSpec with GivenWhenThen with TableDrivenProp
     Given("a Mongo Dao")
     val dao: GenericDao[Member] = new MongoDaoImpl[Member]()
     And("a MEMBER entity")
-    val entity: Member = new Member(1001, 1000, "Dido", "Tramp", "dido@gmail.com", new ContactInfo("Fake St. 123"), new DateTime(), new DateTime())
+    val entity: Member = DomainSamples.members(1001)
 
     When("persist it to the database")
     dao.save(entity)
@@ -83,7 +83,7 @@ class MongoDaoImplSuite extends PropSpec with GivenWhenThen with TableDrivenProp
     Given("a Mongo Dao")
     val dao: GenericDao[Group] = new MongoDaoImpl[Group]()
     And("a GROUP entity")
-    val entity: Group = new Group(1002, "Avengers", List(1001))
+    val entity: Group = DomainSamples.groups(1002)
 
     When("persist it to the database")
     dao.save(entity)
@@ -99,7 +99,7 @@ class MongoDaoImplSuite extends PropSpec with GivenWhenThen with TableDrivenProp
     Given("a Mongo Dao")
     val dao: GenericDao[Notification] = new MongoDaoImpl[Notification]()
     And("a NOTIFICATION entity")
-    val entity: Notification = new Notification(1004, 1001, List(1001), "Hello", new DateTime(), new DateTime())
+    val entity: Notification = DomainSamples.notifications(1004)
 
     When("persist it to the database")
     dao.save(entity)
@@ -115,7 +115,7 @@ class MongoDaoImplSuite extends PropSpec with GivenWhenThen with TableDrivenProp
     Given("a Mongo Dao")
     val dao: GenericDao[MessageTemplate] = new MongoDaoImpl[MessageTemplate]()
     And("a MESSAGE TEMPLATE entity")
-    val entity: MessageTemplate = new MessageTemplate(1005, "Hello", 1001, new DateTime())
+    val entity: MessageTemplate = DomainSamples.messageTemplates(1005)
 
     When("persist it to the database")
     dao.save(entity)
