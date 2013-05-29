@@ -28,3 +28,13 @@ Advise to a group of persons about your absence by any way. eg: sms, whatsapp me
 
 [![Build Status](https://travis-ci.org/caelwinner/bsadvise.png?branch=master)](https://travis-ci.org/caelwinner/bsadvise)  
 Available for Scala 2.10. Based om Casbah 2.6.1.
+
+###Build and Install
+
+** Download the Bsadvise from Git.**
+** It use SBT as Build Tool so to build just go to the project root and run any of these commands: **
+
+1. sbt compile
+2. sbt test
+3. sbt update (update dependencies)
+4. sbt gen-idea (if you want to use IntelliJ run this and It will generate convert it to IntelliJ Project.)

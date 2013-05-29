@@ -26,7 +26,7 @@ object BsadviseBuild extends Build {
   import BuildSettings._
 
   val testDeps = Seq(scalatest)
-  val coreDeps = Seq(casbah, json4sNative, json4sExt, jodaTime, slf4jApi, slf4jSimple, salat, config) ++ testDeps
+  val coreDeps = Seq(casbah, json4sNative, json4sExt, jodaTime, logback, slf4jApi, slf4jSimple, salat, config) ++ testDeps
 
   lazy val bsadvise = Project(
     id = "bsadvise",
@@ -137,6 +137,7 @@ object Dependencies {
   val casbah = "org.mongodb" %% "casbah" % "2.6.1"
   val json4sNative = "org.json4s" %% "json4s-native" % "3.2.4"
   val json4sExt = "org.json4s" %% "json4s-ext" % "3.2.4"
+  val logback = "ch.qos.logback" % "logback-classic" % "1.0.13"
 
 }
 
