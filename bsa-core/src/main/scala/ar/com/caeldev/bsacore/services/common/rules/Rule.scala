@@ -1,6 +1,7 @@
 package ar.com.caeldev.bsacore.services.validations
 
 import scala.util.control.Breaks._
+import ar.com.caeldev.bsacore.config.ConfigContext
 
 trait Rule[T] {
 
@@ -25,7 +26,7 @@ trait Rule[T] {
   }
 }
 
-case class Success(implicit val status: String = "OK")
+case class Success()
 
 object Success {
   val success: Success = new Success()
@@ -35,12 +36,14 @@ object Success {
   }
 }
 
-case class Error(code: Long, description: String, implicit val status: String = "ERROR")
+case class Error(code: Long, description: String)
 
 object Error {
 
+  val config: ConfigContext = new ConfigContext("errors.conf")
+
   def create(code: Long): Error = {
-    new Error(code, "default")
+    new Error(code, config.get("errors.validations."+code.toString+".description"))
   }
 
 }
