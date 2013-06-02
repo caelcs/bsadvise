@@ -1,7 +1,8 @@
-package ar.com.caeldev.bsacore.services
+package ar.com.caeldev.bsacore.services.role
 
 import ar.com.caeldev.bsacore.domain.Role
 import ar.com.caeldev.bsacore.services.exceptions.ServiceException
+import ar.com.caeldev.bsacore.services.common.Service
 
 class RoleService(implicit val mot: Manifest[Role]) extends Service[Role] {
 
@@ -30,7 +31,7 @@ class RoleService(implicit val mot: Manifest[Role]) extends Service[Role] {
 
   def validate(entity: Role) = {
     if (entity.description.isEmpty) {
-      throw new ServiceException("Validation Error: Description is empty.")
+      throw new ServiceException("Rule Error: Description is empty.")
     }
   }
 }

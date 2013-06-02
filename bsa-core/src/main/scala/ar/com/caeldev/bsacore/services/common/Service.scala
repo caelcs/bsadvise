@@ -1,4 +1,4 @@
-package ar.com.caeldev.bsacore.services
+package ar.com.caeldev.bsacore.services.common
 
 import ar.com.caeldev.bsacore.dao.{ GenericDao, MongoDaoImpl }
 

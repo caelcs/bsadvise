@@ -3,6 +3,8 @@ package ar.com.caeldev.bsacore.services
 import org.scalatest.{ GivenWhenThen, FunSpec }
 import ar.com.caeldev.bsacore.domain.{ DomainSamples, Role }
 import ar.com.caeldev.bsacore.services.exceptions.ServiceException
+import ar.com.caeldev.bsacore.services.role.RoleService
+import ar.com.caeldev.bsacore.services.common.Service
 
 class RoleServiceSuite extends FunSpec with GivenWhenThen {
 
