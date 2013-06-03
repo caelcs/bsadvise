@@ -3,11 +3,11 @@ package ar.com.caeldev.bsacore.services.validations
 import org.scalatest.{ GivenWhenThen, PropSpec }
 import org.scalatest.prop.TableDrivenPropertyChecks
 import ar.com.caeldev.bsacore.config.ConfigContext
-import ar.com.caeldev.bsacore.services.common.rules.NotEmptyRule
+import ar.com.caeldev.bsacore.services.common.rules.NotEmpty
 
 class RuleSuite extends PropSpec with GivenWhenThen with TableDrivenPropertyChecks {
 
-  val ruleNotEmpty = NotEmptyRule.get
+  val ruleNotEmpty = NotEmpty.get
 
   property("should not be create an Error Class from an invalid code") {
     Given("an invalid code error")
@@ -89,5 +89,4 @@ class RuleSuite extends PropSpec with GivenWhenThen with TableDrivenPropertyChec
     Then("should not pass the validation.")
     assert(result.isRight)
   }
-
 }

@@ -3,7 +3,7 @@ package ar.com.caeldev.bsacore.services.role
 import ar.com.caeldev.bsacore.domain.Role
 import ar.com.caeldev.bsacore.services.common.Service
 import ar.com.caeldev.bsacore.services.validations.{ Rule }
-import ar.com.caeldev.bsacore.services.common.rules.NotEmptyRule
+import ar.com.caeldev.bsacore.services.common.rules.NotEmpty
 
 class RoleService(implicit val mot: Manifest[Role]) extends Service[Role] {
 
@@ -31,7 +31,7 @@ class RoleService(implicit val mot: Manifest[Role]) extends Service[Role] {
   }
 
   def applyRulesUsing(entity: Role): List[Rule[_]] = {
-    val stringRules = List(new Rule[String](List(entity.description, entity.id.toString), NotEmptyRule.get))
+    val stringRules = List(new Rule[String](List(entity.description, entity.id.toString), NotEmpty.get))
     stringRules
   }
 }

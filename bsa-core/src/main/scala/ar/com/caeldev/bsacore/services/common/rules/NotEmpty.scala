@@ -2,7 +2,7 @@ package ar.com.caeldev.bsacore.services.common.rules
 
 import ar.com.caeldev.bsacore.services.validations.{ Error, Success }
 
-object NotEmptyRule {
+object NotEmpty {
 
   val get = { x: String =>
     var result: Either[Success, Error] = null
