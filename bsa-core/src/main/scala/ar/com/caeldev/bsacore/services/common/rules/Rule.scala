@@ -13,12 +13,10 @@ trait Rule[T] {
     var result: Either[Success, Error] = Left(Success.create())
     breakable {
       entities.foreach { f: T =>
-        isValid(f, validation) match {
-          case Right(error) => {
-            result = Right(error)
-            break
-          }
-          case Left(success) => {}
+        val singleResult: Either[Success, Error] = isValid(f, validation)
+        if (singleResult.isRight) {
+          result = singleResult
+          break
         }
       }
     }
@@ -43,7 +41,7 @@ object Error {
   val config: ConfigContext = new ConfigContext("errors.conf")
 
   def create(code: Long): Error = {
-    new Error(code, config.get("errors.validations."+code.toString+".description"))
+    new Error(code, config.get("errors.rules."+code.toString+".description"))
   }
 
 }

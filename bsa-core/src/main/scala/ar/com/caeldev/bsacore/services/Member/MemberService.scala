@@ -29,5 +29,6 @@ class MemberService(implicit val mot: Manifest[Member]) extends Service[Member] 
   }
 
   def validate(entity: Member) = {
+
   }
 }

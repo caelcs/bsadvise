@@ -3,17 +3,11 @@ package ar.com.caeldev.bsacore.services.validations
 import org.scalatest.{ GivenWhenThen, PropSpec }
 import org.scalatest.prop.TableDrivenPropertyChecks
 import ar.com.caeldev.bsacore.config.ConfigContext
+import ar.com.caeldev.bsacore.services.common.rules.NotEmptyRule
 
 class RuleSuite extends PropSpec with GivenWhenThen with TableDrivenPropertyChecks with Rule[String] {
 
-  val ruleNotEmpty = { x: String =>
-    var result: Either[Success, Error] = Left(Success.create())
-    x.isEmpty match {
-      case true  => { result = Right(Error.create(1000)) }
-      case false => {}
-    }
-    result
-  }
+  val ruleNotEmpty = NotEmptyRule.rule
 
   property("should not be create an Error Class from an invalid code") {
     Given("an invalid code error")
@@ -22,7 +16,7 @@ class RuleSuite extends PropSpec with GivenWhenThen with TableDrivenPropertyChec
     When("try to create an error from the code")
     Then("should not create it raising a ConfigException")
     intercept[com.typesafe.config.ConfigException] {
-      val error: Error = Error.create(code)
+      Error.create(code)
     }
   }
 
@@ -36,7 +30,7 @@ class RuleSuite extends PropSpec with GivenWhenThen with TableDrivenPropertyChec
     val error: Error = Error.create(code)
 
     Then("should be created successfully")
-    assert(error.description === config.get("errors.validations."+code.toString+".description"))
+    assert(error.description === config.get("errors.rules."+code.toString+".description"))
   }
 
   property("should validate an String that is empty with a given Function") {
