@@ -5,7 +5,7 @@ import ar.com.caeldev.bsacore.config.ConfigContext
 
 class Rule[T](validation: (T) => Either[Success, Error]) {
 
-  var entities: List[T] = _
+  var entities: List[T] = Nil
 
   def this(entity: T, validation: (T) => Either[Success, Error]) = {
     this(validation)

@@ -2,6 +2,7 @@ package ar.com.caeldev.bsacore.services.common
 
 import ar.com.caeldev.bsacore.dao.{ GenericDao, MongoDaoImpl }
 import ar.com.caeldev.bsacore.services.validations.Rule
+import ar.com.caeldev.bsacore.services.exceptions.ServiceException
 
 trait Service[T <: AnyRef] {
 
@@ -17,6 +18,15 @@ trait Service[T <: AnyRef] {
 
   def get(id: Long): T
 
-  def validate(entity: T)
+  def validate(entity: T) = {
+    val rules = applyRulesUsing(entity)
+    rules.foreach { rule =>
+      if (rule.validate().isRight) {
+        throw new ServiceException()
+      }
+    }
+  }
+
+  def applyRulesUsing(entity: T): List[Rule[_]]
 
 }

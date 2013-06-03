@@ -6,7 +6,7 @@ object DomainSamples {
 
   val roles: Map[Long, Role] = Map(
     (1000, new Role(1000, "test1000")),
-    (1001, new Role(1000, "")))
+    (1001, new Role(1001, "")))
 
   val members: Map[Long, Member] = Map(
     (1001, new Member(1001, 1000, "Dido", "Tramp", "dido@gmail.com", new ContactInfo("Fake St. 123"), new DateTime(), new DateTime())))

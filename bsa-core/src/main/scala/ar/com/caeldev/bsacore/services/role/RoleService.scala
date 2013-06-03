@@ -1,8 +1,9 @@
 package ar.com.caeldev.bsacore.services.role
 
 import ar.com.caeldev.bsacore.domain.Role
-import ar.com.caeldev.bsacore.services.exceptions.ServiceException
 import ar.com.caeldev.bsacore.services.common.Service
+import ar.com.caeldev.bsacore.services.validations.{ Rule }
+import ar.com.caeldev.bsacore.services.common.rules.NotEmptyRule
 
 class RoleService(implicit val mot: Manifest[Role]) extends Service[Role] {
 
@@ -29,9 +30,8 @@ class RoleService(implicit val mot: Manifest[Role]) extends Service[Role] {
     dao.findById(id)
   }
 
-  def validate(entity: Role) = {
-    if (entity.description.isEmpty) {
-      throw new ServiceException("Rule Error: Description is empty.")
-    }
+  def applyRulesUsing(entity: Role): List[Rule[_]] = {
+    val stringRules = List(new Rule[String](List(entity.description, entity.id.toString), NotEmptyRule.rule))
+    stringRules
   }
 }
