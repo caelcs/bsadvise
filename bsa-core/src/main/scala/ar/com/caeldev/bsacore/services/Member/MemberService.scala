@@ -31,7 +31,7 @@ class MemberService(implicit val mot: Manifest[Member]) extends Service[Member] 
   }
 
   def applyRulesUsing(entity: Member): List[Rule[_]] = {
-    val rule = List(new Rule[String](List(entity.id.toString, entity.role_id.toString, entity.firstName, entity.lastName, entity.email), NotEmptyRule.rule))
+    val rule = List(new Rule[String](List(entity.id.toString, entity.role_id.toString, entity.firstName, entity.lastName, entity.email), NotEmptyRule.get))
     rule
   }
 }

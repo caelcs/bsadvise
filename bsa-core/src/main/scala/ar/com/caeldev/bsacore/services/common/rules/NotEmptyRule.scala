@@ -4,7 +4,7 @@ import ar.com.caeldev.bsacore.services.validations.{ Error, Success }
 
 object NotEmptyRule {
 
-  val rule = { x: String =>
+  val get = { x: String =>
     var result: Either[Success, Error] = null
     x.isEmpty match {
       case true  => { result = Right(Error.create(1000)) }

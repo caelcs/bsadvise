@@ -31,7 +31,7 @@ class RoleService(implicit val mot: Manifest[Role]) extends Service[Role] {
   }
 
   def applyRulesUsing(entity: Role): List[Rule[_]] = {
-    val stringRules = List(new Rule[String](List(entity.description, entity.id.toString), NotEmptyRule.rule))
+    val stringRules = List(new Rule[String](List(entity.description, entity.id.toString), NotEmptyRule.get))
     stringRules
   }
 }

@@ -7,7 +7,7 @@ import ar.com.caeldev.bsacore.services.common.rules.NotEmptyRule
 
 class RuleSuite extends PropSpec with GivenWhenThen with TableDrivenPropertyChecks {
 
-  val ruleNotEmpty = NotEmptyRule.rule
+  val ruleNotEmpty = NotEmptyRule.get
 
   property("should not be create an Error Class from an invalid code") {
     Given("an invalid code error")
