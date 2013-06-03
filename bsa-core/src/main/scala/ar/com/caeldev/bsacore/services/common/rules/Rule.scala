@@ -3,17 +3,34 @@ package ar.com.caeldev.bsacore.services.validations
 import scala.util.control.Breaks._
 import ar.com.caeldev.bsacore.config.ConfigContext
 
-trait Rule[T] {
+class Rule[T](validation: (T) => Either[Success, Error]) {
 
-  def isValid(entity: T, validation: (T) => Either[Success, Error]): Either[Success, Error] = {
+  var entities: List[T] = _
+
+  def this(entity: T, validation: (T) => Either[Success, Error]) = {
+    this(validation)
+    entities = List(entity)
+  }
+
+  def this(entities: List[T], validation: (T) => Either[Success, Error]) = {
+    this(validation)
+    this.entities = entities
+  }
+
+  private def isValid(entity: T): Either[Success, Error] = {
     validation(entity)
   }
 
-  def areValid(entities: List[T], validation: (T) => Either[Success, Error]): Either[Success, Error] = {
+  def validate(entities: List[T]): Either[Success, Error] = {
+    this.entities = entities
+    validate()
+  }
+
+  def validate(): Either[Success, Error] = {
     var result: Either[Success, Error] = Left(Success.create())
     breakable {
       entities.foreach { f: T =>
-        val singleResult: Either[Success, Error] = isValid(f, validation)
+        val singleResult: Either[Success, Error] = isValid(f)
         if (singleResult.isRight) {
           result = singleResult
           break

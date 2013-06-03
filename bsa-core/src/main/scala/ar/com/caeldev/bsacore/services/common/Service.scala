@@ -1,6 +1,7 @@
 package ar.com.caeldev.bsacore.services.common
 
 import ar.com.caeldev.bsacore.dao.{ GenericDao, MongoDaoImpl }
+import ar.com.caeldev.bsacore.services.validations.Rule
 
 trait Service[T <: AnyRef] {
 

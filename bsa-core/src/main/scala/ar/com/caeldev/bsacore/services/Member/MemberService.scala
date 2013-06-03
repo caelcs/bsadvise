@@ -4,6 +4,8 @@ import ar.com.caeldev.bsacore.domain.{ Role, Member }
 import ar.com.caeldev.bsacore.dao.{ MongoDaoImpl, GenericDao }
 import ar.com.caeldev.bsacore.services.exceptions.ServiceException
 import ar.com.caeldev.bsacore.services.common.Service
+import ar.com.caeldev.bsacore.services.validations.Rule
+import ar.com.caeldev.bsacore.services.common.rules.NotEmptyRule
 
 class MemberService(implicit val mot: Manifest[Member]) extends Service[Member] {
 
@@ -29,6 +31,7 @@ class MemberService(implicit val mot: Manifest[Member]) extends Service[Member] 
   }
 
   def validate(entity: Member) = {
-
+    val rule: Rule[String] = new Rule[String](List(entity.firstName, entity.lastName, entity.email), NotEmptyRule.rule)
+    rule.validate()
   }
 }
