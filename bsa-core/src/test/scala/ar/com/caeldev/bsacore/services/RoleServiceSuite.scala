@@ -37,5 +37,39 @@ class RoleServiceSuite extends FunSpec with GivenWhenThen {
       }
     }
 
+    it("Should update an entity to the backend") {
+      Given("a Role Entity persisted")
+      val entity: Role = DomainSamples.roles(1000)
+      val roleService: Service[Role] = new RoleService()
+      roleService.add(entity)
+
+      And("update the Role entity with new data")
+      val toBeUpdateEntity: Role = DomainSamples.roles(1012)
+
+      When("update the entity Member")
+      val updatedRole = roleService.update(toBeUpdateEntity)
+
+      Then("should be successfully updated")
+      assert(updatedRole.id == entity.id)
+      assert(updatedRole.description != entity.description)
+
+      roleService.delete(updatedRole.id)
+
+    }
+
+    it("Should be delete an entity from the backend") {
+      Given("a Role Entity persisted")
+      val entity: Role = DomainSamples.roles(1000)
+      val roleService: Service[Role] = new RoleService()
+      roleService.add(entity)
+
+      When("delete the entity Member")
+      roleService.delete(entity.id)
+
+      Then("should be successfully deleted")
+      val roleFromDB: Role = roleService.get(1000)
+      assert(roleFromDB == null)
+    }
+
   }
 }

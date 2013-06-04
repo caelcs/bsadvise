@@ -29,6 +29,8 @@ class MemberServiceSuite extends FunSpec with GivenWhenThen {
       assert(persistedMember.lastName === member.lastName)
       assert(persistedMember.firstName === member.firstName)
       assert(persistedMember.role_id === member.role_id)
+
+      memberService.delete(persistedMember.id)
     }
 
     it("Should not add a new not valid Member") {
@@ -43,6 +45,55 @@ class MemberServiceSuite extends FunSpec with GivenWhenThen {
       }
     }
 
+    it("Should update valid Member") {
+      Given("a valid Member persisted")
+      val member: Member = DomainSamples.members(1001)
+      val memberService: Service[Member] = new MemberService()
+      memberService.add(member)
+
+      And("update the entity Member")
+      val memberUpdate: Member = DomainSamples.members(1013)
+
+      When("try to update the member to DB")
+      val memberUpdated: Member = memberService.update(memberUpdate)
+
+      Then("should pass successfully")
+      assert(memberUpdated.firstName != member.firstName)
+
+      memberService.delete(memberUpdated.id)
+    }
+
+    it("Should delete valid Member") {
+      Given("a valid Member persisted")
+      val member: Member = DomainSamples.members(1001)
+      val memberService: Service[Member] = new MemberService()
+      memberService.add(member)
+
+      When("try to delete the member to DB")
+      memberService.delete(member.id)
+
+      Then("should pass successfully")
+      val memberFromDB: Member = memberService.get(member.id)
+
+      assert(memberFromDB == null)
+    }
+
+  }
+
+  it("Should update valid Member") {
+    Given("a valid Member persisted")
+    val member: Member = DomainSamples.members(1001)
+    val memberService: Service[Member] = new MemberService()
+    memberService.add(member)
+
+    And("update the entity Member")
+    val memberUpdate: Member = DomainSamples.members(1013)
+
+    When("try to update the member to DB")
+    val memberUpdated: Member = memberService.update(memberUpdate)
+
+    Then("should pass successfully")
+    assert(memberUpdated.firstName != member.firstName)
   }
 
 }
