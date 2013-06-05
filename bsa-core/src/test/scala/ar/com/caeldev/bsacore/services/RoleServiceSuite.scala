@@ -22,6 +22,8 @@ class RoleServiceSuite extends FunSpec with GivenWhenThen {
       assert(entitySaved.equals(entity))
 
       roleService.delete(entitySaved.id)
+      val deletedEntity: Role = roleService.get(entitySaved.id)
+      assert(deletedEntity == null)
     }
 
     it("Should not add a new entity to the backend") {
@@ -54,6 +56,8 @@ class RoleServiceSuite extends FunSpec with GivenWhenThen {
       assert(updatedRole.description != entity.description)
 
       roleService.delete(updatedRole.id)
+      val deletedEntity: Role = roleService.get(updatedRole.id)
+      assert(deletedEntity == null)
 
     }
 

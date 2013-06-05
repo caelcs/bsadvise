@@ -18,15 +18,22 @@ trait Service[T <: AnyRef] {
 
   def get(id: Long): T
 
-  def validate(entity: T) = {
-    val rules = applyRulesUsing(entity)
-    rules.foreach { rule =>
+  def validate(entity: T, operation: String) = {
+    val specificRules: List[Rule[_]] = applyRulesFor(entity, operation)
+    specificRules.foreach { rule =>
       if (rule.validate().isRight) {
         throw new ServiceException()
       }
     }
   }
 
-  def applyRulesUsing(entity: T): List[Rule[_]]
+  def applyRulesFor(entity: T, operation: String): List[Rule[_]]
 
+}
+
+object Operation extends Enumeration {
+  type Operation = Value
+  val add = Value("add")
+  val update = Value("update")
+  val delete = Value("delete")
 }
