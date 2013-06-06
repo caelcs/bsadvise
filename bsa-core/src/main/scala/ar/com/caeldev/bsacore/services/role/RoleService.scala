@@ -7,6 +7,7 @@ import scala.util.control.Exception._
 import ar.com.caeldev.bsacore.domain.Role
 import ar.com.caeldev.bsacore.services.exceptions.ServiceException
 import ar.com.caeldev.bsacore.services.role.rules.RoleWithMemberReferencesExits
+import ar.com.caeldev.bsacore.config.ConfigContext
 
 class RoleService(implicit val mot: Manifest[Role]) extends Service[Role] {
 
@@ -41,7 +42,8 @@ class RoleService(implicit val mot: Manifest[Role]) extends Service[Role] {
 
 object RoleRules {
 
-  val operationCatch = catching(classOf[NoSuchElementException]).withApply(e => throw new ServiceException(e))
+  val appConfigContext: ConfigContext = new ConfigContext("errors.conf")
+  val operationCatch = catching(classOf[NoSuchElementException]).withApply(e => throw new ServiceException(appConfigContext.get("errors.services.1100.description")))
 
   def get(entity: Role, operation: String): List[Rule[_]] = {
     var results: List[Rule[_]] = Nil

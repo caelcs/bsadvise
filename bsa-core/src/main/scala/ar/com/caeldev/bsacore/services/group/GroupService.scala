@@ -6,6 +6,7 @@ import ar.com.caeldev.bsacore.services.common.rules.NotEmpty
 import scala.util.control.Exception._
 import ar.com.caeldev.bsacore.domain.Group
 import ar.com.caeldev.bsacore.services.exceptions.ServiceException
+import ar.com.caeldev.bsacore.config.ConfigContext
 
 class GroupService(implicit val mot: Manifest[Group]) extends Service[Group] {
 
@@ -40,7 +41,8 @@ class GroupService(implicit val mot: Manifest[Group]) extends Service[Group] {
 
 object GroupRules {
 
-  val operationCatch = catching(classOf[NoSuchElementException]).withApply(e => throw new ServiceException(e))
+  val appConfigContext: ConfigContext = new ConfigContext("errors.conf")
+  val operationCatch = catching(classOf[NoSuchElementException]).withApply(e => throw new ServiceException(appConfigContext.get("errors.services.1100.description")))
 
   def get(entity: Group, operation: String): List[Rule[_]] = {
     var results: List[Rule[_]] = Nil

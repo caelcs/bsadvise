@@ -7,6 +7,7 @@ import ar.com.caeldev.bsacore.services.common.rules.NotEmpty
 import ar.com.caeldev.bsacore.services.role.rules.RoleExists
 import scala.util.control.Exception.catching
 import ar.com.caeldev.bsacore.services.exceptions.{ ServiceException, ValidationException }
+import ar.com.caeldev.bsacore.config.ConfigContext
 
 class MemberService(implicit val mot: Manifest[Member]) extends Service[Member] {
 
@@ -40,7 +41,9 @@ class MemberService(implicit val mot: Manifest[Member]) extends Service[Member] 
 }
 
 object MemberRules {
-  val operationCatch = catching(classOf[NoSuchElementException]).withApply(e => throw new ServiceException(e))
+
+  val appConfigContext: ConfigContext = new ConfigContext("errors.conf")
+  val operationCatch = catching(classOf[NoSuchElementException]).withApply(e => throw new ServiceException(appConfigContext.get("errors.services.1100.description")))
 
   def get(entity: Member, operation: String): List[Rule[_]] = {
     var results: List[Rule[_]] = Nil
