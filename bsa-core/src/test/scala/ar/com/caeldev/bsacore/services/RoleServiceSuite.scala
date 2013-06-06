@@ -6,6 +6,7 @@ import ar.com.caeldev.bsacore.services.exceptions.ServiceException
 import ar.com.caeldev.bsacore.services.role.RoleService
 import ar.com.caeldev.bsacore.services.common.Service
 import ar.com.caeldev.bsacore.services.member.MemberService
+import ar.com.caeldev.bsacore.config.ConfigContext
 
 class RoleServiceSuite extends FunSpec with GivenWhenThen {
 
@@ -35,9 +36,14 @@ class RoleServiceSuite extends FunSpec with GivenWhenThen {
 
       When("try to add the entity to the backend")
       Then("should raise a ServiceException")
-      intercept[ServiceException] {
+      val thrown = intercept[ServiceException] {
         roleService.add(entity)
       }
+
+      Then("the exception message should match for 1000 code")
+      val appConfigContext: ConfigContext = new ConfigContext("errors.conf")
+      assert(thrown.getMessage === appConfigContext.get("errors.rules.1000.description"))
+
     }
 
     it("Should update an entity to the backend") {
@@ -88,9 +94,13 @@ class RoleServiceSuite extends FunSpec with GivenWhenThen {
       memberService.add(memberEntity)
 
       When("try delete the entity Role raise a ServiceException")
-      intercept[ServiceException] {
+      val thrown = intercept[ServiceException] {
         roleService.delete(entity.id)
       }
+
+      Then("the exception message should match for 1002 code")
+      val appConfigContext: ConfigContext = new ConfigContext("errors.conf")
+      assert(thrown.getMessage === appConfigContext.get("errors.rules.1002.description"))
 
       memberService.delete(memberEntity.id)
       roleService.delete(entity.id)

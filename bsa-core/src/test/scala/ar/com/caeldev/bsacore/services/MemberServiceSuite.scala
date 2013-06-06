@@ -6,6 +6,7 @@ import ar.com.caeldev.bsacore.services.common.Service
 import ar.com.caeldev.bsacore.services.role.RoleService
 import ar.com.caeldev.bsacore.services.member.MemberService
 import ar.com.caeldev.bsacore.services.exceptions.ServiceException
+import ar.com.caeldev.bsacore.config.ConfigContext
 
 class MemberServiceSuite extends FunSpec with GivenWhenThen {
 
@@ -42,12 +43,16 @@ class MemberServiceSuite extends FunSpec with GivenWhenThen {
       Given("a not valid Member with an invalid role")
       val member: Member = DomainSamples.members(1011)
 
-      When("try to persist the member")
-      Then("should pass successfully")
+      When("try to persist the member raise a ServiceException")
       val memberService: Service[Member] = new MemberService()
-      intercept[ServiceException] {
+      val thrown = intercept[ServiceException] {
         memberService.add(member)
       }
+
+      Then("the exception message should match for 1001 code")
+      val appConfigContext: ConfigContext = new ConfigContext("errors.conf")
+      assert(thrown.getMessage === appConfigContext.get("errors.rules.1001.description"))
+
     }
 
     it("Should update valid Member") {
