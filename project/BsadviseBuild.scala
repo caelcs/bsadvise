@@ -36,14 +36,20 @@ object BsadviseBuild extends Build {
       publishArtifact in (Compile, packageDoc) := false, 
       publishArtifact in (Compile, packageSrc) := false 
     ),
-    aggregate = Seq(bsacore)
-  ) dependsOn(bsacore)
+    aggregate = Seq(bsacore, bsacoreweb)
+  )
 
   lazy val bsacore = Project(
     id = "bsa-core",
     base = file("bsa-core"),
     settings = buildSettings ++ Seq(libraryDependencies ++= coreDeps)
   )
+
+  lazy val bsacoreweb = Project(
+    id = "bsa-core-web",
+    base = file("bsa-core-web"),
+    settings = buildSettings ++ Seq(libraryDependencies ++= coreDeps)
+  ) dependsOn(bsacore)
 }
 
 object BuildSettings {
