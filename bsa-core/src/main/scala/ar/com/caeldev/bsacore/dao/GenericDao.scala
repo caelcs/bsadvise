@@ -10,4 +10,6 @@ trait GenericDao[T] {
 
   def findById(id: Long): T
 
+  def findBy(field: String, value: Any): List[T]
+
 }

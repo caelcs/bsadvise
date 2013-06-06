@@ -1,10 +1,11 @@
 package ar.com.caeldev.bsacore.services
 
 import org.scalatest.{ GivenWhenThen, FunSpec }
-import ar.com.caeldev.bsacore.domain.{ DomainSamples, Role }
+import ar.com.caeldev.bsacore.domain.{ Member, DomainSamples, Role }
 import ar.com.caeldev.bsacore.services.exceptions.ServiceException
 import ar.com.caeldev.bsacore.services.role.RoleService
 import ar.com.caeldev.bsacore.services.common.Service
+import ar.com.caeldev.bsacore.services.member.MemberService
 
 class RoleServiceSuite extends FunSpec with GivenWhenThen {
 
@@ -48,7 +49,7 @@ class RoleServiceSuite extends FunSpec with GivenWhenThen {
       And("update the Role entity with new data")
       val toBeUpdateEntity: Role = DomainSamples.roles(1012)
 
-      When("update the entity Member")
+      When("update the entity Role")
       val updatedRole = roleService.update(toBeUpdateEntity)
 
       Then("should be successfully updated")
@@ -67,7 +68,7 @@ class RoleServiceSuite extends FunSpec with GivenWhenThen {
       val roleService: Service[Role] = new RoleService()
       roleService.add(entity)
 
-      When("delete the entity Member")
+      When("delete the entity Role")
       roleService.delete(entity.id)
 
       Then("should be successfully deleted")
@@ -75,5 +76,24 @@ class RoleServiceSuite extends FunSpec with GivenWhenThen {
       assert(roleFromDB == null)
     }
 
+    it("Should not delete an entity Role who is referenced by a Member") {
+      Given("a Role Entity persisted")
+      val entity: Role = DomainSamples.roles(1000)
+      val roleService: Service[Role] = new RoleService()
+      roleService.add(entity)
+
+      And("a Member Entity which reference to the Role Entity already persisted")
+      val memberEntity: Member = DomainSamples.members(1001)
+      val memberService: Service[Member] = new MemberService()
+      memberService.add(memberEntity)
+
+      When("try delete the entity Role raise a ServiceException")
+      intercept[ServiceException] {
+        roleService.delete(entity.id)
+      }
+
+      memberService.delete(memberEntity.id)
+      roleService.delete(entity.id)
+    }
   }
 }

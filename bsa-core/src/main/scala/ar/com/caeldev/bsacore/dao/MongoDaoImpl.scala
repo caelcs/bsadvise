@@ -42,6 +42,16 @@ class MongoDaoImpl[T <: AnyRef](implicit val mot: Manifest[T]) extends GenericDa
     result
   }
 
+  def findBy(field: String, value: Any): List[T] = {
+    val query = MongoDBObject(field -> value)
+    var result: List[T] = List.empty
+    collection.find(query).foreach {
+      x =>
+        result = result ::: List[T](serializer.deserialize(x))
+    }
+    result
+  }
+
   def find(query: MongoDBObject, sort: Option[MongoDBObject], rows: Option[Int]): List[T] = {
     var result: List[T] = List.empty
     var cursor = collection.find(query)

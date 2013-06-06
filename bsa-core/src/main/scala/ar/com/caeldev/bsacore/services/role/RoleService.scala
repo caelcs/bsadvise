@@ -6,6 +6,7 @@ import ar.com.caeldev.bsacore.services.common.rules.NotEmpty
 import scala.util.control.Exception._
 import ar.com.caeldev.bsacore.domain.Role
 import ar.com.caeldev.bsacore.services.exceptions.ServiceException
+import ar.com.caeldev.bsacore.services.role.rules.RoleWithMemberReferencesExits
 
 class RoleService(implicit val mot: Manifest[Role]) extends Service[Role] {
 
@@ -54,7 +55,10 @@ object RoleRules {
           results = List(
             new Rule[String](List(entity.description, entity.id.toString), NotEmpty.get))
         }
-        case Operation.delete => { results = List() }
+        case Operation.delete => {
+          results = List(
+            new Rule[Long](entity.id, RoleWithMemberReferencesExits.get))
+        }
       }
     }
     results
