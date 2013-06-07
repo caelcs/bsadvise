@@ -17,7 +17,7 @@ class RoleService(implicit val mot: Manifest[Role]) extends Service[Role] {
     dao.findById(entity.id)
   }
 
-  def delete(id: Long) {
+  def delete(id: Any) {
     val entityToDelete: Role = dao.findById(id)
     validate(entityToDelete, Operation.delete.toString)
     dao.remove(entityToDelete)
@@ -31,7 +31,7 @@ class RoleService(implicit val mot: Manifest[Role]) extends Service[Role] {
     dao.findById(entity.id)
   }
 
-  def get(id: Long): Role = {
+  def get(id: Any): Role = {
     dao.findById(id)
   }
 

@@ -32,12 +32,11 @@ class MongoDaoImpl[T <: AnyRef](implicit val mot: Manifest[T]) extends GenericDa
     collection.remove(dbObject)
   }
 
-  def findById(id: Long): T = {
-    val query = MongoDBObject("id" -> id)
+  def findById(id: Any): T = {
+    val results = findBy("id", id)
     var result: T = null.asInstanceOf[T]
-    collection.find(query).foreach {
-      x =>
-        result = serializer.deserialize(x)
+    if (!results.isEmpty) {
+      result = results.head
     }
     result
   }

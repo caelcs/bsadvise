@@ -12,11 +12,11 @@ trait Service[T <: AnyRef] {
 
   def add(entity: T): T
 
-  def delete(id: Long)
+  def delete(id: Any)
 
   def update(entity: T): T
 
-  def get(id: Long): T
+  def get(id: Any): T
 
   def validate(entity: T, operation: String) = {
     val specificRules: List[Rule[_]] = applyRulesFor(entity, operation)

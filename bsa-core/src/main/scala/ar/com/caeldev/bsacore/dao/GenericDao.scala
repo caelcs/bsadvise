@@ -8,7 +8,7 @@ trait GenericDao[T] {
 
   def remove(entity: T)
 
-  def findById(id: Long): T
+  def findById(id: Any): T
 
   def findBy(field: String, value: Any): List[T]
 

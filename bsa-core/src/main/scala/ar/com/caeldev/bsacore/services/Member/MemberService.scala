@@ -17,7 +17,7 @@ class MemberService(implicit val mot: Manifest[Member]) extends Service[Member] 
     dao.findById(entity.id)
   }
 
-  def delete(id: Long) {
+  def delete(id: Any) {
     val entityToDelete: Member = dao.findById(id)
     validate(entityToDelete, Operation.delete.toString)
     dao.remove(entityToDelete)
@@ -31,7 +31,7 @@ class MemberService(implicit val mot: Manifest[Member]) extends Service[Member] 
     dao.findById(entity.id)
   }
 
-  def get(id: Long): Member = {
+  def get(id: Any): Member = {
     dao.findById(id)
   }
 

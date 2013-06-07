@@ -16,7 +16,7 @@ class GroupService(implicit val mot: Manifest[Group]) extends Service[Group] {
     dao.findById(entity.id)
   }
 
-  def delete(id: Long) {
+  def delete(id: Any) {
     val entityToDelete: Group = dao.findById(id)
     validate(entityToDelete, Operation.delete.toString)
     dao.remove(entityToDelete)
@@ -30,7 +30,7 @@ class GroupService(implicit val mot: Manifest[Group]) extends Service[Group] {
     dao.findById(entity.id)
   }
 
-  def get(id: Long): Group = {
+  def get(id: Any): Group = {
     dao.findById(id)
   }
 
