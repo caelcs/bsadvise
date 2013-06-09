@@ -15,7 +15,9 @@ object DomainSamples {
     (1013, new Member(1001, 1000, "DidoFake", "TrampFake", "didofake@gmail.com", new ContactInfo("Fake St. 123"), new DateTime(), new DateTime())))
 
   val groups: Map[Long, Group] = Map(
-    (1002, new Group(1002, "Avengers", List(1001))))
+    (1002, new Group(1002, "Avengers", List(1001))),
+    (1003, new Group(1002, "The Avengers", List(1001))),
+    (1006, new Group(1002, "The Avengers", List.empty)))
 
   val notifications: Map[Long, Notification] = Map(
     (1004, new Notification(1004, 1001, List(1001), "Hello", new DateTime(), new DateTime())))
