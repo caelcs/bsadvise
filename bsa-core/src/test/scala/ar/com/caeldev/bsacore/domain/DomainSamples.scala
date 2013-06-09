@@ -20,7 +20,7 @@ object DomainSamples {
     (1006, new Group(1002, "The Avengers", List.empty)))
 
   val notifications: Map[Long, Notification] = Map(
-    (1004, new Notification(1004, 1001, List(1001), "Hello", new DateTime(), new DateTime())))
+    (1004, new Notification(1004, 1001, List(1001), "Hello", new DateTime())))
 
   val messageTemplates: Map[Long, MessageTemplate] = Map(
     (1005, new MessageTemplate(1005, "Hello", 1001, new DateTime())))
