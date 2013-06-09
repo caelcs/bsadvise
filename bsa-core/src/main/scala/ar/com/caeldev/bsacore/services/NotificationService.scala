@@ -1,6 +1,6 @@
 package ar.com.caeldev.bsacore.services
 
-import ar.com.caeldev.bsacore.domain.{ Notification }
+import ar.com.caeldev.bsacore.domain.Notification
 import ar.com.caeldev.bsacore.validations.{ Operation, Rule, Validation }
 import ar.com.caeldev.bsacore.validations.rules.{ ListNotEmpty, NotNull, NotEmpty }
 import org.joda.time.DateTime

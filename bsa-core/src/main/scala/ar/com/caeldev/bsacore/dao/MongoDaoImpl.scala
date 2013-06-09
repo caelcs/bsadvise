@@ -4,7 +4,6 @@ import ar.com.caeldev.bsacore.serializers.{ BsonSerializer, Serializer }
 import ar.com.caeldev.bsacore.db.DBConnection
 import com.mongodb.casbah.Imports._
 import com.mongodb.casbah.TypeImports.MongoCollection
-import ar.com.caeldev.bsacore.domain.Role
 
 class MongoDaoImpl[T <: AnyRef](implicit val mot: Manifest[T]) extends GenericDao[T] {
 
@@ -24,7 +23,7 @@ class MongoDaoImpl[T <: AnyRef](implicit val mot: Manifest[T]) extends GenericDa
     }
   }
 
-  def save(entity: T) = {
+  def save(entity: T) {
     catcher {
       val dbObject = serializer.serialize(entity)
       collection += dbObject

@@ -29,7 +29,7 @@ object DBConnection {
     collection
   }
 
-  def login(user: Option[String], password: Option[String]) = {
+  def login(user: Option[String], password: Option[String]) {
     if (!isAuthenticated) {
       var userTemp: String = dbUser
       var passwordTemp: String = dbPassword
@@ -58,7 +58,7 @@ object DBConnection {
     }
   }
 
-  def connectTo(environment: String) = {
+  def connectTo(environment: String) {
     validate(environment)
     dbServer = envConfigContext.get("environments."+environment+".db.server")
     dbPort = envConfigContext.get("environments."+environment+".db.port").toInt
@@ -70,7 +70,7 @@ object DBConnection {
     isConnected = true
   }
 
-  def connect() = {
+  def connect() {
     val env: String = appConfigContext.get("application.environment")
     connectTo(env)
   }

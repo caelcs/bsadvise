@@ -33,7 +33,7 @@ class Rule[T](validation: (T) => Either[Success, Error]) {
         val singleResult: Either[Success, Error] = isValid(f)
         if (singleResult.isRight) {
           result = singleResult
-          break
+          break()
         }
       }
     }

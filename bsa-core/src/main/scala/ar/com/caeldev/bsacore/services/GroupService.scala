@@ -1,9 +1,6 @@
 package ar.com.caeldev.bsacore.services
 
-import scala.util.control.Exception._
 import ar.com.caeldev.bsacore.domain.Group
-import ar.com.caeldev.bsacore.services.exceptions.ServiceException
-import ar.com.caeldev.bsacore.config.ConfigContext
 import ar.com.caeldev.bsacore.validations.rules.{ MemberExists, NotEmpty }
 import ar.com.caeldev.bsacore.validations.{ Operation, Validation, Rule }
 

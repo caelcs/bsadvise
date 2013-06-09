@@ -6,7 +6,7 @@ import ar.com.caeldev.bsacore.commons.domain.{ Success, Error }
 
 trait Validation[T] {
 
-  def validate(entity: T, operation: Operation.Value) = {
+  def validate(entity: T, operation: Operation.Value) {
     executeRules(applyCommonsRulesFor(entity))
     executeRules(applyRulesFor(entity, operation))
   }
