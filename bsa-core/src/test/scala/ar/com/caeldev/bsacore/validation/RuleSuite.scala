@@ -1,9 +1,10 @@
-package ar.com.caeldev.bsacore.services.validations
+package ar.com.caeldev.bsacore.validation
 
 import org.scalatest.{ GivenWhenThen, PropSpec }
 import org.scalatest.prop.TableDrivenPropertyChecks
 import ar.com.caeldev.bsacore.config.ConfigContext
-import ar.com.caeldev.bsacore.services.common.rules.NotEmpty
+import ar.com.caeldev.bsacore.validation.rules.NotEmpty
+import ar.com.caeldev.bsacore.validation
 
 class RuleSuite extends PropSpec with GivenWhenThen with TableDrivenPropertyChecks {
 
@@ -16,7 +17,7 @@ class RuleSuite extends PropSpec with GivenWhenThen with TableDrivenPropertyChec
     When("try to create an error from the code")
     Then("should not create it raising a ConfigException")
     intercept[com.typesafe.config.ConfigException] {
-      Error.create(code)
+      validation.Error.create(code)
     }
   }
 
@@ -27,7 +28,7 @@ class RuleSuite extends PropSpec with GivenWhenThen with TableDrivenPropertyChec
     val config: ConfigContext = new ConfigContext("errors.conf")
 
     When("try to create an error from the code")
-    val error: Error = Error.create(code)
+    val error: validation.Error = validation.Error.create(code)
 
     Then("should be created successfully")
     assert(error.description === config.get("errors.rules."+code.toString+".description"))
@@ -40,7 +41,7 @@ class RuleSuite extends PropSpec with GivenWhenThen with TableDrivenPropertyChec
     val rule: Rule[String] = new Rule[String](valueTest, ruleNotEmpty)
 
     When("execute the validation with the function NotEmpty String")
-    val result: Either[Success, Error] = rule.validate()
+    val result: Either[Success, validation.Error] = rule.validate()
 
     Then("should not pass the validation.")
     assert(result.isRight)
@@ -54,7 +55,7 @@ class RuleSuite extends PropSpec with GivenWhenThen with TableDrivenPropertyChec
     val rule: Rule[String] = new Rule[String](valueTest, ruleNotEmpty)
 
     When("execute the validation with the function NotEmpty String")
-    val result: Either[Success, Error] = rule.validate()
+    val result: Either[Success, validation.Error] = rule.validate()
 
     Then("should pass the validation.")
     assert(result.isLeft)
@@ -69,7 +70,7 @@ class RuleSuite extends PropSpec with GivenWhenThen with TableDrivenPropertyChec
     val rule: Rule[String] = new Rule[String](List(firstValueTest, secondValueTest), ruleNotEmpty)
 
     When("execute the validation on both Strings with the function NotEmpty String")
-    val result: Either[Success, Error] = rule.validate()
+    val result: Either[Success, validation.Error] = rule.validate()
 
     Then("should pass the validation.")
     assert(result.isLeft)
@@ -84,7 +85,7 @@ class RuleSuite extends PropSpec with GivenWhenThen with TableDrivenPropertyChec
     val rule: Rule[String] = new Rule[String](List(firstValueTest, secondValueTest), ruleNotEmpty)
 
     When("execute the validation on both Strings with the function NotEmpty String")
-    val result: Either[Success, Error] = rule.validate()
+    val result: Either[Success, validation.Error] = rule.validate()
 
     Then("should not pass the validation.")
     assert(result.isRight)

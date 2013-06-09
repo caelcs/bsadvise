@@ -1,4 +1,4 @@
-package ar.com.caeldev.bsacore.services.validations
+package ar.com.caeldev.bsacore.validation
 
 import scala.util.control.Breaks._
 import ar.com.caeldev.bsacore.config.ConfigContext

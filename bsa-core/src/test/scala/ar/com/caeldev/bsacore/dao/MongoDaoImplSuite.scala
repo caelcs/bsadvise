@@ -3,12 +3,9 @@ package ar.com.caeldev.bsacore.dao
 import org.scalatest.{ PropSpec, GivenWhenThen }
 import com.mongodb.casbah.query.Imports._
 import org.scalatest.prop.TableDrivenPropertyChecks
-import org.joda.time.DateTime
 import scala.Predef._
-import scala.Some
 import ar.com.caeldev.bsacore.domain._
 import ar.com.caeldev.bsacore.domain.Group
-import ar.com.caeldev.bsacore.domain.ContactInfo
 import scala.Some
 import ar.com.caeldev.bsacore.domain.Member
 

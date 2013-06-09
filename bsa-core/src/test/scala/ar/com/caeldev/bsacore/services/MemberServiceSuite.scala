@@ -2,11 +2,10 @@ package ar.com.caeldev.bsacore.services
 
 import org.scalatest.{ GivenWhenThen, FunSpec }
 import ar.com.caeldev.bsacore.domain.{ Member, Role, DomainSamples }
-import ar.com.caeldev.bsacore.services.common.Service
-import ar.com.caeldev.bsacore.services.role.RoleService
-import ar.com.caeldev.bsacore.services.member.MemberService
 import ar.com.caeldev.bsacore.services.exceptions.ServiceException
 import ar.com.caeldev.bsacore.config.ConfigContext
+import ar.com.caeldev.bsacore.serializer.exceptions.SerializeException
+import ar.com.caeldev.bsacore.validation.exceptions.ValidationException
 
 class MemberServiceSuite extends FunSpec with GivenWhenThen {
 
@@ -45,7 +44,7 @@ class MemberServiceSuite extends FunSpec with GivenWhenThen {
 
       When("try to persist the member raise a ServiceException")
       val memberService: Service[Member] = new MemberService()
-      val thrown = intercept[ServiceException] {
+      val thrown = intercept[ValidationException] {
         memberService.add(member)
       }
 
@@ -96,6 +95,22 @@ class MemberServiceSuite extends FunSpec with GivenWhenThen {
       Then("should pass successfully")
       val memberFromDB: Member = memberService.get(member.id)
       assert(memberFromDB == null)
+    }
+
+    it("Should not delete an invalid Member") {
+      Given("an invalid Member Id")
+      val id: Long = 212121
+
+      val memberService: Service[Member] = new MemberService()
+
+      When("try to delete the member to DB")
+      val thrown = intercept[ValidationException] {
+        memberService.delete(id)
+      }
+
+      Then("should had failed")
+      val appConfigContext: ConfigContext = new ConfigContext("errors.conf")
+      assert(thrown.getMessage === appConfigContext.get("errors.rules.1004.description"))
     }
   }
 }

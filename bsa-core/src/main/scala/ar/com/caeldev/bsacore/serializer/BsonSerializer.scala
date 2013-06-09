@@ -10,13 +10,17 @@ class BsonSerializer[T <: AnyRef](implicit mot: Manifest[T]) extends Serializer[
   RegisterJodaTimeConversionHelpers()
 
   def serialize(entity: T): DBObject = {
-    val result = grater[T].asDBObject(entity)
-    result
+    catcher {
+      val result = grater[T].asDBObject(entity)
+      result
+    }
   }
 
   def deserialize(target: DBObject): T = {
-    val result = grater[T].asObject(target)
-    result
+    catcher {
+      val result = grater[T].asObject(target)
+      result
+    }
   }
 
 }

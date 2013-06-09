@@ -1,15 +1,13 @@
-package ar.com.caeldev.bsacore.services.member
+package ar.com.caeldev.bsacore.services
 
-import ar.com.caeldev.bsacore.domain.{ Member }
-import ar.com.caeldev.bsacore.services.common.{ Operation, Service }
-import ar.com.caeldev.bsacore.services.validations.Rule
-import ar.com.caeldev.bsacore.services.common.rules.NotEmpty
-import ar.com.caeldev.bsacore.services.role.rules.RoleExists
+import ar.com.caeldev.bsacore.domain.Member
 import scala.util.control.Exception.catching
-import ar.com.caeldev.bsacore.services.exceptions.{ ServiceException, ValidationException }
+import ar.com.caeldev.bsacore.services.exceptions.ServiceException
 import ar.com.caeldev.bsacore.config.ConfigContext
+import ar.com.caeldev.bsacore.validation.{ Rule, Validation }
+import ar.com.caeldev.bsacore.validation.rules.{ RoleExists, NotEmpty }
 
-class MemberService(implicit val mot: Manifest[Member]) extends Service[Member] {
+class MemberService(implicit val mot: Manifest[Member]) extends Service[Member] with Validation[Member] {
 
   def add(entity: Member): Member = {
     validate(entity, Operation.add.toString)
@@ -20,7 +18,9 @@ class MemberService(implicit val mot: Manifest[Member]) extends Service[Member] 
   def delete(id: Any) {
     val entityToDelete: Member = dao.findById(id)
     validate(entityToDelete, Operation.delete.toString)
-    dao.remove(entityToDelete)
+    catcher {
+      dao.remove(entityToDelete)
+    }
   }
 
   def update(entity: Member): Member = {
@@ -43,7 +43,7 @@ class MemberService(implicit val mot: Manifest[Member]) extends Service[Member] 
 object MemberRules {
 
   val appConfigContext: ConfigContext = new ConfigContext("errors.conf")
-  val operationCatch = catching(classOf[NoSuchElementException]).withApply(e => throw new ServiceException(appConfigContext.get("errors.services.1100.description")))
+  val operationCatch = catching(classOf[NoSuchElementException]).withApply(e => throw new ServiceException(appConfigContext.get("errors.services.1100.description"), e))
 
   def get(entity: Member, operation: String): List[Rule[_]] = {
     var results: List[Rule[_]] = Nil

@@ -3,10 +3,9 @@ package ar.com.caeldev.bsacore.services
 import org.scalatest.{ GivenWhenThen, FunSpec }
 import ar.com.caeldev.bsacore.domain.{ Member, DomainSamples, Role }
 import ar.com.caeldev.bsacore.services.exceptions.ServiceException
-import ar.com.caeldev.bsacore.services.role.RoleService
-import ar.com.caeldev.bsacore.services.common.Service
-import ar.com.caeldev.bsacore.services.member.MemberService
 import ar.com.caeldev.bsacore.config.ConfigContext
+import ar.com.caeldev.bsacore.serializer.exceptions.SerializeException
+import ar.com.caeldev.bsacore.validation.exceptions.ValidationException
 
 class RoleServiceSuite extends FunSpec with GivenWhenThen {
 
@@ -36,7 +35,7 @@ class RoleServiceSuite extends FunSpec with GivenWhenThen {
 
       When("try to add the entity to the backend")
       Then("should raise a ServiceException")
-      val thrown = intercept[ServiceException] {
+      val thrown = intercept[ValidationException] {
         roleService.add(entity)
       }
 
@@ -82,6 +81,21 @@ class RoleServiceSuite extends FunSpec with GivenWhenThen {
       assert(roleFromDB == null)
     }
 
+    it("Should not delete an entity using an invalid Role Id") {
+      Given("an invalid Role Id")
+      val id: Long = 232323423
+      val roleService: Service[Role] = new RoleService()
+
+      When("try to delete using the invalid Id")
+      val thrown = intercept[ValidationException] {
+        roleService.delete(id)
+      }
+
+      Then("should had failed")
+      val appConfigContext: ConfigContext = new ConfigContext("errors.conf")
+      assert(thrown.getMessage === appConfigContext.get("errors.rules.1004.description"))
+    }
+
     it("Should not delete an entity Role who is referenced by a Member") {
       Given("a Role Entity persisted")
       val entity: Role = DomainSamples.roles(1000)
@@ -94,7 +108,7 @@ class RoleServiceSuite extends FunSpec with GivenWhenThen {
       memberService.add(memberEntity)
 
       When("try delete the entity Role raise a ServiceException")
-      val thrown = intercept[ServiceException] {
+      val thrown = intercept[ValidationException] {
         roleService.delete(entity.id)
       }
 

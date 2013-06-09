@@ -9,10 +9,14 @@ class JsonSerializer[T <: AnyRef](implicit mot: Manifest[T]) extends Serializer[
   implicit val formats = native.Serialization.formats(NoTypeHints) ++ JodaTimeSerializers.all
 
   def serialize(entity: T): String = {
-    swrite(entity)
+    catcher {
+      swrite(entity)
+    }
   }
 
   def deserialize(target: String): T = {
-    read[T](target)
+    catcher {
+      read[T](target)
+    }
   }
 }

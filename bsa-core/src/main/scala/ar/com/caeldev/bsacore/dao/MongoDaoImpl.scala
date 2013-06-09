@@ -15,21 +15,27 @@ class MongoDaoImpl[T <: AnyRef](implicit val mot: Manifest[T]) extends GenericDa
   def findAll(): List[T] = {
     val query = MongoDBObject("id" -> MongoDBObject("$exists" -> true))
     var result: List[T] = List.empty
-    collection.find(query).foreach {
-      x =>
-        result = result ::: List[T](serializer.deserialize(x))
+    catcher {
+      collection.find(query).foreach {
+        x =>
+          result = result ::: List[T](serializer.deserialize(x))
+      }
+      result
     }
-    result
   }
 
   def save(entity: T) = {
-    val dbObject = serializer.serialize(entity)
-    collection += dbObject
+    catcher {
+      val dbObject = serializer.serialize(entity)
+      collection += dbObject
+    }
   }
 
   def remove(entity: T) {
-    val dbObject = serializer.serialize(entity)
-    collection.remove(dbObject)
+    catcher {
+      val dbObject = serializer.serialize(entity)
+      collection.remove(dbObject)
+    }
   }
 
   def findById(id: Any): T = {
@@ -44,11 +50,13 @@ class MongoDaoImpl[T <: AnyRef](implicit val mot: Manifest[T]) extends GenericDa
   def findBy(field: String, value: Any): List[T] = {
     val query = MongoDBObject(field -> value)
     var result: List[T] = List.empty
-    collection.find(query).foreach {
-      x =>
-        result = result ::: List[T](serializer.deserialize(x))
+    catcher {
+      collection.find(query).foreach {
+        x =>
+          result = result ::: List[T](serializer.deserialize(x))
+      }
+      result
     }
-    result
   }
 
   def find(query: MongoDBObject, sort: Option[MongoDBObject], rows: Option[Int]): List[T] = {
@@ -64,11 +72,12 @@ class MongoDaoImpl[T <: AnyRef](implicit val mot: Manifest[T]) extends GenericDa
       case None       => ()
     }
 
-    cursor.foreach {
-      x =>
-        result = result ::: List[T](serializer.deserialize(x))
+    catcher {
+      cursor.foreach {
+        x =>
+          result = result ::: List[T](serializer.deserialize(x))
+      }
     }
-
     result
   }
 }
