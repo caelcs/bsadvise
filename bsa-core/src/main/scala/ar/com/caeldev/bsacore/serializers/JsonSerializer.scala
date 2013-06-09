@@ -1,4 +1,4 @@
-package ar.com.caeldev.bsacore.serializer
+package ar.com.caeldev.bsacore.serializers
 
 import org.json4s.{ NoTypeHints, native }
 import native.Serialization.{ read, write => swrite }

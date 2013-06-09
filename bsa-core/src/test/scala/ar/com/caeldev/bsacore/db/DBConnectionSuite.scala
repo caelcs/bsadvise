@@ -1,7 +1,7 @@
 package ar.com.caeldev.bsacore.db
 
 import org.scalatest.{ GivenWhenThen, FunSpec }
-import ar.com.caeldev.bsacore.serializer.BsonSerializer
+import ar.com.caeldev.bsacore.serializers.BsonSerializer
 import ar.com.caeldev.bsacore.domain.Role
 import com.mongodb.casbah.Imports._
 

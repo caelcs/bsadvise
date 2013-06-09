@@ -1,7 +1,7 @@
-package ar.com.caeldev.bsacore.serializer
+package ar.com.caeldev.bsacore.serializers
 
 import scala.util.control.Exception._
-import ar.com.caeldev.bsacore.serializer.exceptions.SerializeException
+import ar.com.caeldev.bsacore.serializers.exceptions.SerializeException
 import ar.com.caeldev.bsacore.config.ConfigContext
 
 trait Serializer[T, V] {

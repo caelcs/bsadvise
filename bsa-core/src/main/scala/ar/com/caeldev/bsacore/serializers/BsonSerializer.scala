@@ -1,4 +1,4 @@
-package ar.com.caeldev.bsacore.serializer
+package ar.com.caeldev.bsacore.serializers
 
 import com.novus.salat.global._
 import com.novus.salat._

@@ -1,7 +1,7 @@
-package ar.com.caeldev.bsacore.validation
+package ar.com.caeldev.bsacore.validations
 
 import scala.util.control.Breaks._
-import ar.com.caeldev.bsacore.config.ConfigContext
+import ar.com.caeldev.bsacore.commons.domain.{ Success, Error }
 
 class Rule[T](validation: (T) => Either[Success, Error]) {
 
@@ -39,27 +39,5 @@ class Rule[T](validation: (T) => Either[Success, Error]) {
     }
     result
   }
-}
-
-case class Success()
-
-object Success {
-  val success: Success = new Success()
-
-  def create(): Success = {
-    success
-  }
-}
-
-case class Error(code: Long, description: String)
-
-object Error {
-
-  val config: ConfigContext = new ConfigContext("errors.conf")
-
-  def create(code: Long): Error = {
-    new Error(code, config.get("errors.rules."+code.toString+".description"))
-  }
-
 }
 

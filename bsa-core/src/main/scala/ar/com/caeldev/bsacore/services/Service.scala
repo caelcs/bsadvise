@@ -24,10 +24,3 @@ trait Service[T <: AnyRef] {
   def get(id: Any): T
 
 }
-
-object Operation extends Enumeration {
-  type Operation = Value
-  val add = Value("add")
-  val update = Value("update")
-  val delete = Value("delete")
-}

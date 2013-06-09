@@ -1,4 +1,4 @@
-package ar.com.caeldev.bsacore.validation.exceptions
+package ar.com.caeldev.bsacore.validations.exceptions
 
 import ar.com.caeldev.bsacore.exceptions.BaseException
 

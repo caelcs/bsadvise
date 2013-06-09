@@ -4,8 +4,8 @@ import org.scalatest.{ GivenWhenThen, FunSpec }
 import ar.com.caeldev.bsacore.domain.{ Member, Role, DomainSamples }
 import ar.com.caeldev.bsacore.services.exceptions.ServiceException
 import ar.com.caeldev.bsacore.config.ConfigContext
-import ar.com.caeldev.bsacore.serializer.exceptions.SerializeException
-import ar.com.caeldev.bsacore.validation.exceptions.ValidationException
+import ar.com.caeldev.bsacore.serializers.exceptions.SerializeException
+import ar.com.caeldev.bsacore.validations.exceptions.ValidationException
 
 class MemberServiceSuite extends FunSpec with GivenWhenThen {
 

@@ -1,4 +1,4 @@
-package ar.com.caeldev.bsacore.serializer
+package ar.com.caeldev.bsacore.serializers
 
 import org.scalatest.{ FunSpec, GivenWhenThen }
 import ar.com.caeldev.bsacore.domain.Role
@@ -7,12 +7,12 @@ import com.mongodb.casbah.Imports._
 class BsonSerializerSuite extends FunSpec with GivenWhenThen {
 
   describe("A Serializer") {
-    it("should serializer any object to bson") {
+    it("should serializers any object to bson") {
 
       Given("a new Role instance")
       val newRole: Role = new Role(1, "Test")
 
-      And("a bson serializer")
+      And("a bson serializers")
       val serializer: BsonSerializer[Role] = new BsonSerializer[Role]()
 
       When("invoke the serialize method")

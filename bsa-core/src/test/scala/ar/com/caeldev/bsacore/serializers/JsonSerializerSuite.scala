@@ -1,4 +1,4 @@
-package ar.com.caeldev.bsacore.serializer
+package ar.com.caeldev.bsacore.serializers
 
 import org.scalatest.{ FunSpec, GivenWhenThen }
 import org.scalatest.prop.TableDrivenPropertyChecks

@@ -1,6 +1,6 @@
 package ar.com.caeldev.bsacore.dao
 
-import ar.com.caeldev.bsacore.serializer.{ BsonSerializer, Serializer }
+import ar.com.caeldev.bsacore.serializers.{ BsonSerializer, Serializer }
 import ar.com.caeldev.bsacore.db.DBConnection
 import com.mongodb.casbah.Imports._
 import com.mongodb.casbah.TypeImports.MongoCollection

@@ -1,4 +1,4 @@
-package ar.com.caeldev.bsacore.serializer.exceptions
+package ar.com.caeldev.bsacore.serializers.exceptions
 
 import ar.com.caeldev.bsacore.exceptions.BaseException
 
