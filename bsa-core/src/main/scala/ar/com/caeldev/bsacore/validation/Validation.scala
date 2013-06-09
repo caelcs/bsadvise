@@ -12,7 +12,7 @@ trait Validation[T] {
 
   private def executeRules(rules: List[Rule[_]]) {
     rules.foreach { rule =>
-      var result: Either[Success, Error] = rule.validate()
+      val result: Either[Success, Error] = rule.validate()
       if (result.isRight) {
         throw new ValidationException(result.right.get.description)
       }
