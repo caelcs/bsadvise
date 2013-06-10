@@ -88,10 +88,9 @@ class JsonSerializerSuite extends FunSpec with GivenWhenThen with TableDrivenPro
 
       assert(entityConv.id === entity.id)
       assert(entityConv.message === entity.message)
-      assert(entityConv.createdAt === entity.createdAt)
+      assert(entityConv.subject === entity.subject)
       assert(entityConv.receivers === entity.receivers)
       assert(entityConv.sender_id === entity.sender_id)
-      assert(entityConv.sentAt === entity.sentAt)
     }
 
     it("Should serialize a MESSAGE TEMPLATE entity to Json") {

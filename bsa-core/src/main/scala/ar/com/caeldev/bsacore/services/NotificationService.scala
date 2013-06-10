@@ -41,8 +41,7 @@ object NotificationRules {
     operation match {
       case Operation.add => {
         results = List(
-          new Rule[String](List(entity.message, entity.id.toString, entity.sender_id.toString), NotEmpty.get),
-          new Rule[DateTime](entity.createdAt, NotNull.get),
+          new Rule[String](List(entity.message, entity.subject, entity.id.toString, entity.sender_id.toString), NotEmpty.get),
           new Rule[List[_]](entity.receivers, NotNull.get),
           new Rule[List[_]](entity.receivers, ListNotEmpty.get))
       }

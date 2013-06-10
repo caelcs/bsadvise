@@ -7,10 +7,11 @@ case class Notification(
     sender_id: Long,
     receivers: List[Long],
     message: String,
-    createdAt: DateTime) {
+    subject: String) {
 
   var sentAt: DateTime = _
   var status: String = _
+  var createdAt: DateTime = new DateTime()
 }
 
 object Status extends Enumeration {
