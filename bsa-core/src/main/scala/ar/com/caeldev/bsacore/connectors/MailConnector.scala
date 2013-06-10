@@ -1,31 +1,27 @@
 package ar.com.caeldev.bsacore.connectors
 
 import ar.com.caeldev.bsacore.commons.domain.{ Category, Error, Success }
-import org.apache.commons.mail.{ HtmlEmail, DefaultAuthenticator }
+import org.apache.commons.mail.{ SimpleEmail, DefaultAuthenticator }
 import ar.com.caeldev.bsacore.config.ConfigContext
 import ar.com.caeldev.bsacore.services.{ Service, MemberService }
-import scala.util.control.Exception._
 import ar.com.caeldev.bsacore.domain.Member
 import ar.com.caeldev.bsacore.domain.Notification
 
 class MailConnector extends Connector {
 
   val smtpConfig: SmtpConfig = SmtpConfig.get()
-  val catcher = catching(classOf[Exception]).withApply(e => e)
 
   def connect(notification: Notification): Either[Success, Error] = {
+
+    val recipients: String = buildRecipients(notification.receivers)
+    val sender: String = buildSender(notification.sender_id)
+    val emailMessage: EmailMessage = new EmailMessage(notification.subject, recipients, sender, notification.message, "", smtpConfig)
+    val resultSent = sendEmailSync(emailMessage)
+
     var result: Either[Success, Error] = null
-    var catcherResponse = catcher.either {
-      val recipients: String = buildRecipients(notification.receivers)
-      val sender: String = buildSender(notification.sender_id)
-
-      val emailMessage: EmailMessage = new EmailMessage(notification.subject, recipients, sender, notification.message, "", smtpConfig)
-      sendEmailSync(emailMessage)
-    }
-
-    catcherResponse match {
-      case Right(_) => { result = Right(Error.create(1202, Category.commons)) }
-      case Left(_)  => { result = Left(Success.create()) }
+    resultSent != null && !resultSent.isEmpty match {
+      case false => { result = Right(Error.create(1202, Category.commons)) }
+      case true  => { result = Left(Success.create()) }
     }
     result
   }
@@ -49,23 +45,22 @@ class MailConnector extends Connector {
     results.mkString(",")
   }
 
-  private def sendEmailSync(emailMessage: EmailMessage) {
+  private def sendEmailSync(emailMessage: EmailMessage): String = {
 
     // Create the email message
-    val email = new HtmlEmail()
-    email.setStartTLSEnabled(emailMessage.smtpConfig.tls)
+    val email = new SimpleEmail()
     email.setSSLOnConnect(emailMessage.smtpConfig.ssl)
     email.setSmtpPort(emailMessage.smtpConfig.port)
     email.setHostName(emailMessage.smtpConfig.host)
     email.setAuthenticator(new DefaultAuthenticator(
       emailMessage.smtpConfig.user,
       emailMessage.smtpConfig.password))
-    email.setHtmlMsg(emailMessage.html)
-      .setTextMsg(emailMessage.text)
+    email.setMsg(emailMessage.text)
       .addTo(emailMessage.recipient)
       .setFrom(emailMessage.from)
       .setSubject(emailMessage.subject)
-      .send()
+    val result: String = email.send()
+    result
   }
 }
 
