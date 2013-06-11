@@ -1,21 +1,14 @@
-package ar.com.caeldev.bsacore.connectors
+package ar.com.caeldev.bsacore.services
 
 import org.scalatest.{ GivenWhenThen, FunSpec }
 import ar.com.caeldev.bsacore.domain._
-import ar.com.caeldev.bsacore.services._
-import ar.com.caeldev.bsacore.commons.domain.{ Success, Error }
-import ar.com.caeldev.bsacore.domain.Role
-import ar.com.caeldev.bsacore.domain.Member
-import ar.com.caeldev.bsacore.domain.Notification
-import ar.com.caeldev.bsacore.domain.Group
 import ar.com.caeldev.bsacore.domain.Role
 import ar.com.caeldev.bsacore.domain.Member
 import ar.com.caeldev.bsacore.domain.Notification
 
-class MailConnectorSuite extends FunSpec with GivenWhenThen {
-
-  describe("A MailConnector") {
-    it("Should send Notification by email") {
+class NotificationServiceSuite extends FunSpec with GivenWhenThen {
+  describe("A Notification Service") {
+    it("Should notify a message to different connectors.") {
       Given("a Role")
       val role: Role = DomainSamples.roles(1000)
       val roleService: Service[Role] = new RoleService()
@@ -33,22 +26,24 @@ class MailConnectorSuite extends FunSpec with GivenWhenThen {
 
       And("a Notification")
       val notification: Notification = DomainSamples.notifications(1004)
+
+      When("try to add a new notification")
       val notificationService: Service[Notification] = new NotificationService()
-      notificationService.add(notification)
+      val result = notificationService.add(notification)
 
-      When("try to send the notification by email")
-      val mailConnector: Connector = new MailConnector()
-
-      val result: Either[Success, Error] = mailConnector.connect(notification)
-
-      Then("should be success")
-      println(result)
-      assert(result.isLeft)
+      Then("should get from backend the same notification")
+      assert(result.id === notification.id)
+      assert(result.message === notification.message)
+      assert(result.receivers_group_id === notification.receivers_group_id)
+      assert(result.sender_id === notification.sender_id)
+      assert(result.status === notification.status)
+      assert(result.subject === notification.subject)
 
       notificationService.delete(notification.id)
       groupService.delete(group.id)
       roleService.delete(role.id)
-    }
-  }
 
+    }
+
+  }
 }

@@ -3,7 +3,6 @@ package ar.com.caeldev.bsacore.services
 import ar.com.caeldev.bsacore.domain.Notification
 import ar.com.caeldev.bsacore.validations.{ Operation, Rule, Validation }
 import ar.com.caeldev.bsacore.validations.rules.{ ListNotEmpty, NotNull, NotEmpty }
-import org.joda.time.DateTime
 
 class NotificationService(implicit val mot: Manifest[Notification]) extends Service[Notification] with Validation[Notification] {
 
@@ -40,9 +39,8 @@ object NotificationRules {
     operation match {
       case Operation.add => {
         List(
-          new Rule[String](List(entity.message, entity.subject, entity.id.toString, entity.sender_id.toString), NotEmpty.get),
-          new Rule[List[_]](entity.receivers, NotNull.get),
-          new Rule[List[_]](entity.receivers, ListNotEmpty.get))
+          new Rule[Long](entity.receivers_group_id, NotNull.get),
+          new Rule[String](List(entity.message, entity.receivers_group_id.toString, entity.subject, entity.id.toString, entity.sender_id.toString), NotEmpty.get))
       }
       case Operation.update => {
         List.empty

@@ -3,9 +3,8 @@ package ar.com.caeldev.bsacore.connectors
 import ar.com.caeldev.bsacore.commons.domain.{ Category, Error, Success }
 import org.apache.commons.mail.{ SimpleEmail, DefaultAuthenticator }
 import ar.com.caeldev.bsacore.config.ConfigContext
-import ar.com.caeldev.bsacore.services.{ Service, MemberService }
-import ar.com.caeldev.bsacore.domain.Member
-import ar.com.caeldev.bsacore.domain.Notification
+import ar.com.caeldev.bsacore.services.{ GroupService, Service, MemberService }
+import ar.com.caeldev.bsacore.domain.{ Group, Member, Notification }
 
 class MailConnector extends Connector {
 
@@ -13,7 +12,7 @@ class MailConnector extends Connector {
 
   def connect(notification: Notification): Either[Success, Error] = {
 
-    val recipients: String = buildRecipients(notification.receivers)
+    val recipients: String = buildRecipients(notification.receivers_group_id)
     val sender: String = buildSender(notification.sender_id)
     val emailMessage: EmailMessage = new EmailMessage(notification.subject, recipients, sender, notification.message, "", smtpConfig)
     val resultSent = sendEmailSync(emailMessage)
@@ -30,11 +29,14 @@ class MailConnector extends Connector {
     member.email
   }
 
-  def buildRecipients(receivers: List[Long]): String = {
+  def buildRecipients(receiver: Long): String = {
+    val groupService: Service[Group] = new GroupService()
+    val group: Group = groupService.get(receiver)
+
     var results = List.empty[String]
     val memberService: Service[Member] = new MemberService()
 
-    receivers.collect {
+    group.members.collect {
       case id: Long =>
         val member: Member = memberService.get(id)
         results :+= member.email

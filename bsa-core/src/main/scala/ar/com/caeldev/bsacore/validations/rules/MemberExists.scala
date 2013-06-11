@@ -1,16 +1,15 @@
 package ar.com.caeldev.bsacore.validations.rules
 
-import ar.com.caeldev.bsacore.dao.{ MongoDaoImpl, GenericDao }
 import ar.com.caeldev.bsacore.domain.Member
 import ar.com.caeldev.bsacore.commons.domain.{ Category, Success, Error }
+import ar.com.caeldev.bsacore.services.{ Service, MemberService }
 
 object MemberExists {
 
   val get = { id: Long =>
-    val dao: GenericDao[Member] = new MongoDaoImpl[Member]()
-    val resultMember: Member = dao.findById(id)
+    val service: Service[Member] = new MemberService()
 
-    resultMember == null match {
+    service.get(id) == null match {
       case true  => { Right(Error.create(1003, Category.rules)) }
       case false => { Left(Success.create()) }
     }

@@ -5,12 +5,12 @@ import org.joda.time.DateTime
 case class Notification(
     id: Long,
     sender_id: Long,
-    receivers: List[Long],
+    receivers_group_id: Long,
     message: String,
     subject: String) {
 
   var sentAt: DateTime = _
-  var status: String = _
+  var status: String = Status.draft.toString
   var createdAt: DateTime = new DateTime()
 }
 
