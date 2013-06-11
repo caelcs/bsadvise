@@ -4,9 +4,6 @@ import org.scalatest.{ GivenWhenThen, FunSpec }
 import ar.com.caeldev.bsacore.domain._
 import ar.com.caeldev.bsacore.services._
 import ar.com.caeldev.bsacore.commons.domain.{ Success, Error }
-import ar.com.caeldev.bsacore.domain.Role
-import ar.com.caeldev.bsacore.domain.Member
-import ar.com.caeldev.bsacore.domain.Notification
 import ar.com.caeldev.bsacore.domain.Group
 import ar.com.caeldev.bsacore.domain.Role
 import ar.com.caeldev.bsacore.domain.Member
@@ -42,7 +39,6 @@ class MailConnectorSuite extends FunSpec with GivenWhenThen {
       val result: Either[Success, Error] = mailConnector.connect(notification)
 
       Then("should be success")
-      println(result)
       assert(result.isLeft)
 
       notificationService.delete(notification.id)
