@@ -61,14 +61,14 @@ class MongoDaoImpl[T <: AnyRef](implicit val mot: Manifest[T]) extends GenericDa
   def find(query: MongoDBObject, sort: Option[MongoDBObject], rows: Option[Int]): List[T] = {
     var result: List[T] = List.empty
     var cursor = collection.find(query)
-    sort match {
-      case Some(sort) => cursor = cursor.sort(sort)
-      case None       => ()
+    cursor = sort match {
+      case Some(sort) => cursor.sort(sort)
+      case None       => cursor
     }
 
-    rows match {
-      case Some(rows) => cursor = cursor.limit(rows)
-      case None       => ()
+    cursor = rows match {
+      case Some(rows) => cursor.limit(rows)
+      case None       => cursor
     }
 
     catcher {

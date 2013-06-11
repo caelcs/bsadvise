@@ -31,17 +31,15 @@ object DBConnection {
 
   def login(user: Option[String], password: Option[String]) {
     if (!isAuthenticated) {
-      var userTemp: String = dbUser
-      var passwordTemp: String = dbPassword
 
-      user match {
-        case Some(user) => userTemp = user
-        case None       => ()
+      val userTemp = user match {
+        case Some(user) => user
+        case None       => dbUser
       }
 
-      password match {
-        case Some(password) => passwordTemp = password
-        case None           => ()
+      val passwordTemp = password match {
+        case Some(password) => password
+        case None           => dbPassword
       }
 
       db.authenticate(userTemp, passwordTemp)
