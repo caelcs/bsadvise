@@ -18,12 +18,10 @@ class MailConnector extends Connector {
     val emailMessage: EmailMessage = new EmailMessage(notification.subject, recipients, sender, notification.message, "", smtpConfig)
     val resultSent = sendEmailSync(emailMessage)
 
-    var result: Either[Success, Error] = null
     resultSent != null && !resultSent.isEmpty match {
-      case false => { result = Right(Error.create(1202, Category.commons)) }
-      case true  => { result = Left(Success.create()) }
+      case false => { Right(Error.create(1202, Category.commons)) }
+      case true  => { Left(Success.create()) }
     }
-    result
   }
 
   def buildSender(id: Long): String = {

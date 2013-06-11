@@ -46,21 +46,19 @@ class GroupService(implicit val mot: Manifest[Group]) extends Service[Group] wit
 object GroupRules {
 
   def get(entity: Group, operation: Operation.Value): List[Rule[_]] = {
-    var results: List[Rule[_]] = Nil
     operation match {
       case Operation.add => {
-        results = List(
+        List(
           new Rule[String](List(entity.id.toString, entity.name), NotEmpty.get),
           new Rule[Long](entity.members, MemberExists.get))
 
       }
       case Operation.update => {
-        results = List(
+        List(
           new Rule[String](List(entity.id.toString, entity.name), NotEmpty.get),
           new Rule[Long](entity.members, MemberExists.get))
       }
-      case Operation.delete => { results = List() }
+      case Operation.delete => { List.empty }
     }
-    results
   }
 }

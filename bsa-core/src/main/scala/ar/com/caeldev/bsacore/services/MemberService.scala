@@ -40,20 +40,18 @@ class MemberService(implicit val mot: Manifest[Member]) extends Service[Member] 
 object MemberRules {
 
   def get(entity: Member, operation: Operation.Value): List[Rule[_]] = {
-    var results: List[Rule[_]] = Nil
     operation match {
       case Operation.add => {
-        results = List(
+        List(
           new Rule[String](List(entity.id.toString, entity.role_id.toString, entity.firstName, entity.lastName, entity.email), NotEmpty.get),
           new Rule[Long](entity.role_id, RoleExists.get))
       }
       case Operation.update => {
-        results = List(
+        List(
           new Rule[String](List(entity.id.toString, entity.role_id.toString, entity.firstName, entity.lastName, entity.email), NotEmpty.get),
           new Rule[Long](entity.role_id, RoleExists.get))
       }
-      case Operation.delete => { results = List() }
+      case Operation.delete => { List.empty }
     }
-    results
   }
 }

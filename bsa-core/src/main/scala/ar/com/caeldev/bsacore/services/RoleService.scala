@@ -40,22 +40,20 @@ class RoleService(implicit val mot: Manifest[Role]) extends Service[Role] with V
 object RoleRules {
 
   def get(entity: Role, operation: Operation.Value): List[Rule[_]] = {
-    var results: List[Rule[_]] = Nil
     operation match {
       case Operation.add => {
-        results = List(
+        List(
           new Rule[String](List(entity.description, entity.id.toString), NotEmpty.get))
       }
       case Operation.update => {
-        results = List(
+        List(
           new Rule[String](List(entity.description, entity.id.toString), NotEmpty.get))
       }
       case Operation.delete => {
-        results = List(
+        List(
           new Rule[Long](entity.id, RoleWithMemberReferencesExits.get))
       }
     }
-    results
   }
 
 }

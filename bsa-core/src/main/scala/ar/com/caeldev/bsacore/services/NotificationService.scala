@@ -37,22 +37,20 @@ class NotificationService(implicit val mot: Manifest[Notification]) extends Serv
 object NotificationRules {
 
   def get(entity: Notification, operation: Operation.Value): List[Rule[_]] = {
-    var results: List[Rule[_]] = Nil
     operation match {
       case Operation.add => {
-        results = List(
+        List(
           new Rule[String](List(entity.message, entity.subject, entity.id.toString, entity.sender_id.toString), NotEmpty.get),
           new Rule[List[_]](entity.receivers, NotNull.get),
           new Rule[List[_]](entity.receivers, ListNotEmpty.get))
       }
       case Operation.update => {
-        results = List.empty
+        List.empty
       }
       case Operation.delete => {
-        results = List.empty
+        List.empty
       }
     }
-    results
   }
 
 }
