@@ -29,6 +29,10 @@ Advise to a group of persons about your absence by any way. eg: sms, whatsapp me
 [![Build Status](https://travis-ci.org/caelwinner/bsadvise.png?branch=master)](https://travis-ci.org/caelwinner/bsadvise)  
 Available for Scala 2.10. Based om Casbah 2.6.1.
 
+###Requirements
+To build the application and run all test you will need:
+1. Download and install MongoDB.
+
 ###Build and Install
 
 ** Download the Bsadvise from Git.**
@@ -38,3 +42,8 @@ Available for Scala 2.10. Based om Casbah 2.6.1.
 2. sbt test
 3. sbt update (update dependencies)
 4. sbt gen-idea (if you want to use IntelliJ run this and It will generate convert it to IntelliJ Project.)
+
+
+
+
+

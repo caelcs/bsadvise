@@ -36,7 +36,7 @@ class MailConnectorSuite extends FunSpec with GivenWhenThen {
       When("try to send the notification by email")
       val mailConnector: Connector = new MailConnector()
 
-      val result: Either[Success, Error] = mailConnector.connect(notification)
+      val result: Either[Success, Error] = mailConnector.send(notification)
 
       Then("should be success")
       assert(result.isLeft)

@@ -29,5 +29,6 @@ object Category extends Enumeration {
   val rules = Value("rules")
   val services = Value("services")
   val commons = Value("commons")
+  val connectors = Value("connectors")
 }
 

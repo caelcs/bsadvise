@@ -3,12 +3,14 @@ package ar.com.caeldev.bsacore.services
 import ar.com.caeldev.bsacore.domain.Notification
 import ar.com.caeldev.bsacore.validations.{ Operation, Rule, Validation }
 import ar.com.caeldev.bsacore.validations.rules.{ GroupReceiversExists, GroupExists, NotNull, NotEmpty }
+import ar.com.caeldev.bsacore.connectors.NotifyUsingConnectors
 
-class NotificationService(implicit val mot: Manifest[Notification]) extends Service[Notification] with Validation[Notification] {
+class NotificationService(implicit val mot: Manifest[Notification]) extends Service[Notification] with Validation[Notification] with NotifyUsingConnectors {
 
   def add(entity: Notification): Notification = {
     validate(entity, Operation.add)
     dao.save(entity)
+    notify(entity)
     dao.findById(entity.id)
   }
 

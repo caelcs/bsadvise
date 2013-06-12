@@ -5,7 +5,9 @@ import ar.com.caeldev.bsacore.commons.domain.{ Success, Error }
 
 trait Connector {
 
-  def connect(notification: Notification): Either[Success, Error]
+  def send(notification: Notification): Either[Success, Error]
+
+  def lastStatus(): Either[Success, Error]
 
 }
 
