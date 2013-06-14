@@ -1,7 +1,7 @@
 package ar.com.caeldev.bsacore.services
 
 import ar.com.caeldev.bsacore.domain.Group
-import ar.com.caeldev.bsacore.validations.rules.{ NotNull, ListNotEmpty, MemberExists, NotEmpty }
+import ar.com.caeldev.bsacore.validations.rules.{ MemberExists, NotEmpty }
 import ar.com.caeldev.bsacore.validations.{ Operation, Validation, Rule }
 
 class GroupService(implicit val mot: Manifest[Group]) extends Service[Group] with Validation[Group] {

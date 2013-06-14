@@ -26,7 +26,9 @@ object BsadviseBuild extends Build {
   import BuildSettings._
 
   val testDeps = Seq(scalatest)
+  val testApiDeps = Seq(sprayTestingkit, akkaTestkit, specs2) ++ testDeps
   val coreDeps = Seq(casbah, json4sNative, json4sExt, jodaTime, logback, slf4jApi, slf4jSimple, salat, config, commonsMail) ++ testDeps
+  val apiDeps =  Seq(sprayCan, sprayRouting, akkaActor) ++ testApiDeps
 
   lazy val bsadvise = Project(
     id = "bsadvise",
@@ -36,7 +38,7 @@ object BsadviseBuild extends Build {
       publishArtifact in (Compile, packageDoc) := false, 
       publishArtifact in (Compile, packageSrc) := false 
     ),
-    aggregate = Seq(bsacore, bsacoreweb)
+    aggregate = Seq(bsacore, bsacoreapi)
   )
 
   lazy val bsacore = Project(
@@ -45,10 +47,10 @@ object BsadviseBuild extends Build {
     settings = buildSettings ++ Seq(libraryDependencies ++= coreDeps)
   )
 
-  lazy val bsacoreweb = Project(
-    id = "bsa-core-web",
-    base = file("bsa-core-web"),
-    settings = buildSettings ++ Seq(libraryDependencies ++= coreDeps)
+  lazy val bsacoreapi = Project(
+    id = "bsa-core-api",
+    base = file("bsa-core-api"),
+    settings = buildSettings ++ Seq(libraryDependencies ++= apiDeps)
   ) dependsOn(bsacore)
 }
 
@@ -67,9 +69,9 @@ object BuildSettings {
     shellPrompt := ShellPrompt.buildShellPrompt,
     parallelExecution in Test := false,
     testFrameworks += TestFrameworks.ScalaTest,
-    resolvers ++= Seq(typeSafeRepo, typeSafeSnapsRepo, oss, ossSnaps),
+    resolvers ++= Seq(typeSafeRepo, typeSafeSnapsRepo, oss, ossSnaps, sprayResp),
     scalacOptions ++= Seq("-deprecation", "-unchecked"),
-    crossScalaVersions := Seq("2.10.0")
+    crossScalaVersions := Seq("2.10.2")
   )
 }
 
@@ -145,6 +147,12 @@ object Dependencies {
   val json4sExt = "org.json4s" %% "json4s-ext" % "3.2.4"
   val logback = "ch.qos.logback" % "logback-classic" % "1.0.13"
   val commonsMail = "org.apache.commons" % "commons-email" % "1.3.1"
+  val sprayCan = "io.spray" % "spray-can" % "1.1-M8"
+  val sprayRouting = "io.spray" % "spray-routing" % "1.1-M8"
+  val sprayTestingkit = "io.spray" % "spray-testkit" % "1.1-M8"
+  val akkaActor = "com.typesafe.akka" %% "akka-actor" % "2.1.4"
+  val akkaTestkit = "com.typesafe.akka" %% "akka-testkit" % "2.1.4"
+  val specs2 = "org.specs2" %% "specs2" % "1.14" % "test"
 
 }
 
@@ -153,6 +161,7 @@ object Repos {
   val typeSafeSnapsRepo = "Typesafe Snaps Repo" at "http://repo.typesafe.com/typesafe/snapshots/"
   val oss = "OSS Sonatype" at "http://oss.sonatype.org/content/repositories/releases/"
   val ossSnaps = "OSS Sonatype Snaps" at "http://oss.sonatype.org/content/repositories/snapshots/"
+  val sprayResp = "spray repo" at "http://repo.spray.io/"
 }
 
 // Shell prompt which show the current project, git branch and build version
