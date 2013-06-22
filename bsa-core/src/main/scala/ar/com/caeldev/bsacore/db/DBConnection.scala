@@ -6,7 +6,7 @@ import com.mongodb.casbah.{ MongoDB, MongoClient, MongoCollection }
 object DBConnection {
 
   val envConfigContext: ConfigContext = new ConfigContext("environments")
-  val appConfigContext: ConfigContext = new ConfigContext("app")
+  val appConfigContext: ConfigContext = new ConfigContext("application")
 
   var dbServer: String = _
   var dbPort: Int = _

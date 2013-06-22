@@ -27,4 +27,8 @@ trait Service[T <: AnyRef] {
     dao.findBy(field, id)
   }
 
+  def getAll: List[T] = {
+    dao.findAll()
+  }
+
 }

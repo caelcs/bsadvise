@@ -92,7 +92,7 @@ case class SmtpConfig(tls: Boolean = false,
 object SmtpConfig {
 
   val config: ConfigContext = new ConfigContext("environments")
-  val appConfigContext: ConfigContext = new ConfigContext("app")
+  val appConfigContext: ConfigContext = new ConfigContext("application")
   val env: String = appConfigContext.get("application.environment")
 
   val host: String = config.get("environments."+env+".mail.host")

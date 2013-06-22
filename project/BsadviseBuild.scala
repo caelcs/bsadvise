@@ -19,6 +19,7 @@
 
 import sbt._
 import Keys._
+import com.github.retronym.SbtOneJar
 
 object BsadviseBuild extends Build {
 
@@ -28,7 +29,7 @@ object BsadviseBuild extends Build {
   val testDeps = Seq(scalatest)
   val testApiDeps = Seq(sprayTestingkit, akkaTestkit, specs2) ++ testDeps
   val coreDeps = Seq(casbah, json4sNative, json4sExt, jodaTime, logback, slf4jApi, slf4jSimple, salat, config, commonsMail) ++ testDeps
-  val apiDeps =  Seq(sprayCan, sprayRouting, akkaActor) ++ testApiDeps
+  val apiDeps =  Seq(sprayCan, sprayRouting, akkaActor, sprayHttpx) ++ testApiDeps
 
   lazy val bsadvise = Project(
     id = "bsadvise",
@@ -50,19 +51,21 @@ object BsadviseBuild extends Build {
   lazy val bsacoreapi = Project(
     id = "bsa-core-api",
     base = file("bsa-core-api"),
-    settings = buildSettings ++ Seq(libraryDependencies ++= apiDeps)
+    settings = buildSettings ++ SbtOneJar.oneJarSettings ++ Seq(libraryDependencies ++= apiDeps)
   ) dependsOn(bsacore)
 }
 
 object BuildSettings {
 
   import Repos._
+  import spray.revolver.RevolverPlugin._
+  import sbtbuildinfo.Plugin._
 
   val buildOrganization = "ar.com.caeldev"
   val buildVersion = "0.1.0.-SNAPSHOT"
-  val buildScalaVersion = "2.10.0"
+  val buildScalaVersion = "2.10.2"
 
-  val buildSettings = Defaults.defaultSettings ++ Format.settings ++ Publish.settings ++ net.virtualvoid.sbt.graph.Plugin.graphSettings ++ Seq(
+  val buildSettings = Defaults.defaultSettings ++ Format.settings ++ Publish.settings ++ net.virtualvoid.sbt.graph.Plugin.graphSettings ++ Revolver.settings ++ Seq(
     organization := buildOrganization,
     version := buildVersion,
     scalaVersion := buildScalaVersion,
@@ -71,7 +74,14 @@ object BuildSettings {
     testFrameworks += TestFrameworks.ScalaTest,
     resolvers ++= Seq(typeSafeRepo, typeSafeSnapsRepo, oss, ossSnaps, sprayResp),
     scalacOptions ++= Seq("-deprecation", "-unchecked"),
-    crossScalaVersions := Seq("2.10.2")
+    crossScalaVersions := Seq("2.10.0")
+  ) ++ buildInfoSettings ++
+  Seq(
+    sourceGenerators in Compile <+= buildInfo,
+    buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion),
+    buildInfoPackage := "ar.com.caeldev.bsadvise"
+  ) ++ Seq(
+    exportJars := true
   )
 }
 
@@ -150,6 +160,7 @@ object Dependencies {
   val sprayCan = "io.spray" % "spray-can" % "1.1-M8"
   val sprayRouting = "io.spray" % "spray-routing" % "1.1-M8"
   val sprayTestingkit = "io.spray" % "spray-testkit" % "1.1-M8"
+  val sprayHttpx = "io.spray" %  "spray-httpx" % "1.1-M8"
   val akkaActor = "com.typesafe.akka" %% "akka-actor" % "2.1.4"
   val akkaTestkit = "com.typesafe.akka" %% "akka-testkit" % "2.1.4"
   val specs2 = "org.specs2" %% "specs2" % "1.14" % "test"
