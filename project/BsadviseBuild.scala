@@ -19,7 +19,9 @@
 
 import sbt._
 import Keys._
-import com.github.retronym.SbtOneJar
+import sbtassembly.Plugin._
+import sbtassembly.Plugin.AssemblyKeys._
+import scala._
 
 object BsadviseBuild extends Build {
 
@@ -28,7 +30,7 @@ object BsadviseBuild extends Build {
 
   val testDeps = Seq(scalatest)
   val testApiDeps = Seq(sprayTestingkit, akkaTestkit, specs2) ++ testDeps
-  val coreDeps = Seq(casbah, json4sNative, json4sExt, jodaTime, logback, slf4jApi, slf4jSimple, salat, config, commonsMail) ++ testDeps
+  val coreDeps = Seq(casbah, json4sNative, json4sExt, jodaTime, logback, salat, config, commonsMail) ++ testDeps
   val apiDeps =  Seq(sprayCan, sprayRouting, akkaActor, sprayHttpx) ++ testApiDeps
 
   lazy val bsadvise = Project(
@@ -51,7 +53,7 @@ object BsadviseBuild extends Build {
   lazy val bsacoreapi = Project(
     id = "bsa-core-api",
     base = file("bsa-core-api"),
-    settings = buildSettings ++ SbtOneJar.oneJarSettings ++ Seq(libraryDependencies ++= apiDeps)
+    settings = buildSettings ++ assemblySettings ++ Package.baseAssemblySettings ++ Seq(libraryDependencies ++= apiDeps)
   ) dependsOn(bsacore)
 }
 
@@ -59,7 +61,6 @@ object BuildSettings {
 
   import Repos._
   import spray.revolver.RevolverPlugin._
-  import sbtbuildinfo.Plugin._
 
   val buildOrganization = "ar.com.caeldev"
   val buildVersion = "0.1.0.-SNAPSHOT"
@@ -75,13 +76,6 @@ object BuildSettings {
     resolvers ++= Seq(typeSafeRepo, typeSafeSnapsRepo, oss, ossSnaps, sprayResp),
     scalacOptions ++= Seq("-deprecation", "-unchecked"),
     crossScalaVersions := Seq("2.10.0")
-  ) ++ buildInfoSettings ++
-  Seq(
-    sourceGenerators in Compile <+= buildInfo,
-    buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion),
-    buildInfoPackage := "ar.com.caeldev.bsadvise"
-  ) ++ Seq(
-    exportJars := true
   )
 }
 
@@ -113,6 +107,25 @@ object Format {
       setPreference(SpaceInsideBrackets, false).
       setPreference(SpacesWithinPatternBinders, true)
   }
+}
+
+object AssemblyKeys {
+
+  val jarName = SettingKey[String]("jar-name")
+
+  def assemblyExcludedFiles(base: Seq[File]): Seq[File] =
+    ((base / "readme.txt")).get
+}
+
+
+object Package {
+  import AssemblyKeys._
+
+  lazy val baseAssemblySettings: Seq[sbt.Project.Setting[_]] = Seq(
+    jarName in assembly <<= (name, version) { (name, version) => name + "-assembly-" + version + ".jar"},
+    excludedFiles in assembly := assemblyExcludedFiles _,
+    test in assembly := {}
+  )
 }
 
 object Publish {
