@@ -8,11 +8,12 @@ import spray.util.LoggingContext
 import util.control.NonFatal
 import spray.httpx.marshalling.Marshaller
 import spray.http.HttpHeaders.RawHeader
-import akka.actor.Actor
+import akka.actor.{ ActorLogging, Actor }
 import org.json4s.{ NoTypeHints, native, Formats }
 import org.json4s.ext.JodaTimeSerializers
 import akka.util.Timeout
 import scala.concurrent.duration._
+import org.slf4j.LoggerFactory
 
 /** Holds potential error response with the HTTP status and optional body
  *
@@ -64,8 +65,9 @@ trait FailureHandling {
 /** Allows you to construct Spray ``HttpService`` from a concatenation of routes; and wires in the error handler.
  *  @param route the (concatenated) route
  */
-class RoutedHttpService(route: Route) extends Actor with HttpService {
+class RoutedHttpService(route: Route) extends Actor with HttpService with ActorLogging {
 
+  def logger = LoggerFactory.getLogger(this.getClass)
   implicit def actorRefFactory = context
 
   implicit val handler = ExceptionHandler {
@@ -77,6 +79,7 @@ class RoutedHttpService(route: Route) extends Actor with HttpService {
   }
 
   def receive = {
+    logger.debug("Request Recieved")
     runRoute(route)(handler, RejectionHandler.Default, context, RoutingSettings.default, LoggingContext.fromActorRefFactory)
   }
 
@@ -116,7 +119,7 @@ object ResourceMap extends Enumeration {
 }
 
 trait CommonConcurrentFeature {
-  implicit val timeout = Timeout(5 seconds)
+  implicit val timeout = Timeout(20 seconds)
 }
 
 trait CommonJson4sSerializationFeature {

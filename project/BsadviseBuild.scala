@@ -30,7 +30,7 @@ object BsadviseBuild extends Build {
 
   val testDeps = Seq(scalatest)
   val testApiDeps = Seq(sprayTestingkit, akkaTestkit, specs2) ++ testDeps
-  val coreDeps = Seq(casbah, json4sNative, json4sExt, jodaTime, logback, salat, config, commonsMail) ++ testDeps
+  val coreDeps = Seq(casbah, json4sNative, json4sExt, jodaTime, logback, akkaSlf4j, salat, config, commonsMail) ++ testDeps
   val apiDeps =  Seq(sprayCan, sprayRouting, akkaActor, sprayHttpx) ++ testApiDeps
 
   lazy val bsadvise = Project(
@@ -114,7 +114,8 @@ object AssemblyKeys {
   val jarName = SettingKey[String]("jar-name")
 
   def assemblyExcludedFiles(base: Seq[File]): Seq[File] =
-    ((base / "readme.txt")).get
+    ((base / "readme.txt") ---
+      (base /".DS_Store")).get
 }
 
 
@@ -174,6 +175,7 @@ object Dependencies {
   val sprayRouting = "io.spray" % "spray-routing" % "1.1-M8"
   val sprayTestingkit = "io.spray" % "spray-testkit" % "1.1-M8"
   val sprayHttpx = "io.spray" %  "spray-httpx" % "1.1-M8"
+  val akkaSlf4j  = "com.typesafe.akka" %% "akka-slf4j" % "2.1.4"
   val akkaActor = "com.typesafe.akka" %% "akka-actor" % "2.1.4"
   val akkaTestkit = "com.typesafe.akka" %% "akka-testkit" % "2.1.4"
   val specs2 = "org.specs2" %% "specs2" % "1.14" % "test"

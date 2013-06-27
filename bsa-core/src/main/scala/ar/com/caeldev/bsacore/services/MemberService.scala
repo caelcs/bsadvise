@@ -3,16 +3,19 @@ package ar.com.caeldev.bsacore.services
 import ar.com.caeldev.bsacore.domain.Member
 import ar.com.caeldev.bsacore.validations.{ Operation, Rule, Validation }
 import ar.com.caeldev.bsacore.validations.rules.{ RoleExists, NotEmpty }
+import org.slf4j.LoggerFactory
 
 class MemberService(implicit val mot: Manifest[Member]) extends Service[Member] with Validation[Member] {
 
   def add(entity: Member): Member = {
+    logger.info("Enter Add method")
     validate(entity, Operation.add)
     dao.save(entity)
     dao.findById(entity.id)
   }
 
   def delete(id: Any) {
+    logger.info("Enter Delete method")
     val entityToDelete: Member = dao.findById(id)
     validate(entityToDelete, Operation.delete)
     catcher {
@@ -21,6 +24,7 @@ class MemberService(implicit val mot: Manifest[Member]) extends Service[Member] 
   }
 
   def update(entity: Member): Member = {
+    logger.info("Enter Update method")
     validate(entity, Operation.update)
     val entityToDelete: Member = dao.findById(entity.id)
     dao.remove(entityToDelete)
@@ -29,6 +33,7 @@ class MemberService(implicit val mot: Manifest[Member]) extends Service[Member] 
   }
 
   def get(id: Any): Member = {
+    logger.info("Enter Get method")
     dao.findById(id)
   }
 

@@ -2,9 +2,7 @@ package ar.com.caeldev.bsacore.services
 
 import org.scalatest.{ GivenWhenThen, FunSpec }
 import ar.com.caeldev.bsacore.domain.{ Member, DomainSamples, Role }
-import ar.com.caeldev.bsacore.services.exceptions.ServiceException
 import ar.com.caeldev.bsacore.config.ConfigContext
-import ar.com.caeldev.bsacore.serializers.exceptions.SerializeException
 import ar.com.caeldev.bsacore.validations.exceptions.ValidationException
 
 class RoleServiceSuite extends FunSpec with GivenWhenThen {
@@ -118,6 +116,29 @@ class RoleServiceSuite extends FunSpec with GivenWhenThen {
 
       memberService.delete(memberEntity.id)
       roleService.delete(entity.id)
+    }
+
+    it("Should get all the entities from the backend") {
+      Given("Role Entities persisted")
+      val entity1: Role = DomainSamples.roles(1000)
+      val entity2: Role = DomainSamples.roles(1012)
+      val roleService: Service[Role] = new RoleService()
+      roleService.add(entity1)
+      roleService.add(entity2)
+
+      When("get all the entities")
+      val result: List[Role] = roleService.getAll
+
+      Then("should be successfully updated")
+      assert(result.size == 2)
+
+      roleService.delete(entity1.id)
+      roleService.delete(entity2.id)
+      val deletedEntity1: Role = roleService.get(entity1.id)
+      val deletedEntity2: Role = roleService.get(entity2.id)
+      assert(deletedEntity1 == null)
+      assert(deletedEntity2 == null)
+
     }
   }
 }

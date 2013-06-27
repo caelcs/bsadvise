@@ -4,10 +4,12 @@ import ar.com.caeldev.bsacore.domain.Notification
 import ar.com.caeldev.bsacore.validations.{ Operation, Rule, Validation }
 import ar.com.caeldev.bsacore.validations.rules.{ GroupReceiversExists, GroupExists, NotNull, NotEmpty }
 import ar.com.caeldev.bsacore.connectors.NotifyUsingConnectors
+import org.slf4j.LoggerFactory
 
 class NotificationService(implicit val mot: Manifest[Notification]) extends Service[Notification] with Validation[Notification] with NotifyUsingConnectors {
 
   def add(entity: Notification): Notification = {
+    logger.info("Enter Add method")
     validate(entity, Operation.add)
     dao.save(entity)
     notify(entity)
@@ -15,6 +17,7 @@ class NotificationService(implicit val mot: Manifest[Notification]) extends Serv
   }
 
   def delete(id: Any) {
+    logger.info("Enter Delete method")
     val entityToDelete: Notification = dao.findById(id)
     validate(entityToDelete, Operation.delete)
     catcher {
@@ -23,10 +26,12 @@ class NotificationService(implicit val mot: Manifest[Notification]) extends Serv
   }
 
   def update(entity: Notification): Notification = {
+    logger.info("Enter Update method")
     throw new UnsupportedOperationException()
   }
 
   def get(id: Any): Notification = {
+    logger.info("Enter Get method")
     dao.findById(id)
   }
 

@@ -3,16 +3,19 @@ package ar.com.caeldev.bsacore.services
 import ar.com.caeldev.bsacore.domain.Role
 import ar.com.caeldev.bsacore.validations.rules.{ RoleWithMemberReferencesExits, NotEmpty }
 import ar.com.caeldev.bsacore.validations.{ Operation, Validation, Rule }
+import org.slf4j.LoggerFactory
 
 class RoleService(implicit val mot: Manifest[Role]) extends Service[Role] with Validation[Role] {
 
   def add(entity: Role): Role = {
+    logger.info("Enter Add method")
     validate(entity, Operation.add)
     dao.save(entity)
     dao.findById(entity.id)
   }
 
   def delete(id: Any) {
+    logger.info("Enter Delete method")
     val entityToDelete: Role = dao.findById(id)
     validate(entityToDelete, Operation.delete)
     catcher {
@@ -21,6 +24,7 @@ class RoleService(implicit val mot: Manifest[Role]) extends Service[Role] with V
   }
 
   def update(entity: Role): Role = {
+    logger.info("Enter Update method")
     validate(entity, Operation.update)
     val entityToDelete: Role = dao.findById(entity.id)
     dao.remove(entityToDelete)
@@ -29,6 +33,7 @@ class RoleService(implicit val mot: Manifest[Role]) extends Service[Role] with V
   }
 
   def get(id: Any): Role = {
+    logger.info("Enter Get method")
     dao.findById(id)
   }
 

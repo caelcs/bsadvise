@@ -5,10 +5,12 @@ import ar.com.caeldev.bsacore.services.exceptions.ServiceException
 import ar.com.caeldev.bsacore.config.ConfigContext
 import scala.util.control.Exception._
 import ar.com.caeldev.bsacore.dao.exceptions.DaoException
+import org.slf4j.LoggerFactory
 
 trait Service[T <: AnyRef] {
 
   implicit val mot: Manifest[T]
+  def logger = LoggerFactory.getLogger(this.getClass)
 
   val dao: GenericDao[T] = new MongoDaoImpl[T]()
 
@@ -24,10 +26,12 @@ trait Service[T <: AnyRef] {
   def get(id: Any): T
 
   def get(field: String, id: Any): List[T] = {
+    logger.info("Enter get (field, id) method")
     dao.findBy(field, id)
   }
 
   def getAll: List[T] = {
+    logger.info("Enter getAll method")
     dao.findAll()
   }
 

@@ -20,7 +20,7 @@ class JsonSerializerSuite extends FunSpec with GivenWhenThen with TableDrivenPro
       When("serialize the entity to json")
       var result: String = serializer.serialize(entity)
 
-      Then("should get a json string")
+      Then(s"should get a json string $result")
       assert(!result.isEmpty)
       var entityConv: Role = serializer.deserialize(result)
       assert(entityConv.description === entity.description)
@@ -37,7 +37,7 @@ class JsonSerializerSuite extends FunSpec with GivenWhenThen with TableDrivenPro
       When("serialize the entity to json")
       var result: String = serializer.serialize(entity)
 
-      Then("should get a json string")
+      Then(s"should get a json string $result")
       assert(!result.isEmpty)
       var entityConv: Member = serializer.deserialize(result)
 
@@ -63,7 +63,7 @@ class JsonSerializerSuite extends FunSpec with GivenWhenThen with TableDrivenPro
       When("serialize the entity to json")
       var result: String = serializer.serialize(entity)
 
-      Then("should get a json string")
+      Then(s"should get a json string $result")
       assert(!result.isEmpty)
       var entityConv: Group = serializer.deserialize(result)
 
@@ -82,7 +82,7 @@ class JsonSerializerSuite extends FunSpec with GivenWhenThen with TableDrivenPro
       When("serialize the entity to json")
       var result: String = serializer.serialize(entity)
 
-      Then("should get a json string")
+      Then(s"should get a json string $result")
       assert(!result.isEmpty)
       var entityConv: Notification = serializer.deserialize(result)
 
@@ -103,7 +103,7 @@ class JsonSerializerSuite extends FunSpec with GivenWhenThen with TableDrivenPro
       When("serialize the entity to json")
       var result: String = serializer.serialize(entity)
 
-      Then("should get a json string")
+      Then(s"should get a json string $result")
       assert(!result.isEmpty)
       var entityConv: MessageTemplate = serializer.deserialize(result)
 

@@ -12,13 +12,13 @@ import ar.com.caeldev.core.ActorOperations.Get
 import ar.com.caeldev.bsacore.domain.Member
 import ar.com.caeldev.core.ActorOperations.Delete
 
-class MemberService(memberService: ActorRef)(implicit executionContext: ExecutionContext) extends Directives with CommonConcurrentFeature with CommonJson4sSerializationFeature with Json4sSupport {
+class MemberService(memberActor: ActorRef)(implicit executionContext: ExecutionContext) extends Directives with CommonConcurrentFeature with CommonJson4sSerializationFeature with Json4sSupport {
 
   val route =
     path(ResourceMap.member) {
       post {
         entity(as[Member]) { member =>
-          val result: Future[Member] = ask(memberService, Add(member)).mapTo[Member]
+          val result: Future[Member] = ask(memberActor, Add(member)).mapTo[Member]
           complete {
             result
           }
@@ -26,7 +26,7 @@ class MemberService(memberService: ActorRef)(implicit executionContext: Executio
       } ~
         put {
           entity(as[Member]) { member =>
-            val result: Future[Member] = ask(memberService, Update(member)).mapTo[Member]
+            val result: Future[Member] = ask(memberActor, Update(member)).mapTo[Member]
             complete {
               result
             }
@@ -35,14 +35,14 @@ class MemberService(memberService: ActorRef)(implicit executionContext: Executio
     } ~
       path(ResourceMap.member / IntNumber) { id =>
         delete {
-          ask(memberService, Delete(id))
+          ask(memberActor, Delete(id))
           complete {
             "success"
           }
 
         } ~
           get {
-            val result: Future[Member] = ask(memberService, Get("id", id)).mapTo[Member]
+            val result: Future[Member] = ask(memberActor, Get("id", id)).mapTo[Member]
             complete {
               result
             }
@@ -50,7 +50,7 @@ class MemberService(memberService: ActorRef)(implicit executionContext: Executio
       } ~
       path(ResourceMap.members) {
         get {
-          val result: Future[Member] = ask(memberService, GetAll).mapTo[Member]
+          val result: Future[List[Member]] = ask(memberActor, GetAll).mapTo[List[Member]]
           complete {
             result
           }

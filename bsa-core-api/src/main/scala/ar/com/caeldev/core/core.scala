@@ -23,8 +23,8 @@ trait BootedCore {
 trait CoreActors {
   this: Core =>
 
-  val role = system.actorOf(Props[RoleServiceActor])
-  val member = system.actorOf(Props[MemberServiceActor])
+  val roleActor = system.actorOf(Props[RoleServiceActor])
+  val memberActor = system.actorOf(Props[MemberServiceActor])
 
 }
 
@@ -32,6 +32,6 @@ object ActorOperations {
   case class Add(entity: Any)
   case class Update(entity: Any)
   case class Delete(id: Any)
-  case class Get(field: String, id: Any)
+  case class Get(fid: Any)
   case class GetAll()
 }

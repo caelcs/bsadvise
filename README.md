@@ -43,6 +43,18 @@ To build the application and run all test you will need:
 3. sbt update (update dependencies)
 4. sbt gen-idea (if you want to use IntelliJ run this and It will generate convert it to IntelliJ Project.)
 
+###Package and Run
+
+for packaging the whole bsadvise project execute:
+
+1. sbt assembly
+
+it will generate a jar with all the project in the following location
+
+bsadvice/bsa-core-api/target/scala-X.XX/bsa-core-api_X.XX-Y.Y.Y.-SNAPSHOT.jar
+
+Running java -jar -Dconfig.file=application.conf bsa-core-api_X.XX-Y.Y.Y.-SNAPSHOT.jar will start the server in the foreground.
+
 
 
 
