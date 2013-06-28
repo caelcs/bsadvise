@@ -32,6 +32,6 @@ object ActorOperations {
   case class Add(entity: Any)
   case class Update(entity: Any)
   case class Delete(id: Any)
-  case class Get(fid: Any)
+  case class Get(id: Any)
   case class GetAll()
 }

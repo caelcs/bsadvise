@@ -2,7 +2,7 @@ package ar.com.caeldev.api
 
 import akka.actor.ActorRef
 import akka.pattern.ask
-import scala.concurrent.{ Future, ExecutionContext }
+import scala.concurrent.{ Await, ExecutionContext }
 import spray.routing.Directives
 import spray.httpx.Json4sSupport
 import ar.com.caeldev.core.ActorOperations._
@@ -11,49 +11,57 @@ import ar.com.caeldev.core.ActorOperations.Update
 import ar.com.caeldev.core.ActorOperations.Get
 import ar.com.caeldev.bsacore.domain.Member
 import ar.com.caeldev.core.ActorOperations.Delete
+import spray.http.StatusCodes
 
 class MemberService(memberActor: ActorRef)(implicit executionContext: ExecutionContext) extends Directives with CommonConcurrentFeature with CommonJson4sSerializationFeature with Json4sSupport {
 
   val route =
-    path(ResourceMap.member) {
-      post {
-        entity(as[Member]) { member =>
-          val result: Future[Member] = ask(memberActor, Add(member)).mapTo[Member]
-          complete {
-            result
-          }
-        }
-      } ~
-        put {
-          entity(as[Member]) { member =>
-            val result: Future[Member] = ask(memberActor, Update(member)).mapTo[Member]
+    post {
+      path(ResourceMap.member) {
+        entity(as[Member]) {
+          member =>
+            val resultAdd = ask(memberActor, Add(member)).mapTo[Member]
+            val result = Await.result(resultAdd, timeout.duration)
             complete {
               result
             }
-          }
         }
+      }
     } ~
-      path(ResourceMap.member / IntNumber) { id =>
-        delete {
-          ask(memberActor, Delete(id))
-          complete {
-            "success"
+      put {
+        path(ResourceMap.member) {
+          entity(as[Member]) {
+            member =>
+              val resultPut = ask(memberActor, Update(member)).mapTo[Member]
+              val result = Await.result(resultPut, timeout.duration)
+              complete {
+                result
+              }
           }
-
+        }
+      } ~
+      delete {
+        path(ResourceMap.member / IntNumber) { id =>
+          memberActor ? Delete(id)
+          complete {
+            StatusCodes.Success
+          }
+        }
+      } ~
+      get {
+        path(ResourceMap.member / IntNumber) { id =>
+          complete {
+            val resultGet = ask(memberActor, Get(id)).mapTo[Member]
+            val result = Await.result(resultGet, timeout.duration)
+            result
+          }
         } ~
-          get {
-            val result: Future[Member] = ask(memberActor, Get("id", id)).mapTo[Member]
+          path(ResourceMap.members) {
             complete {
+              val resultGetAll = ask(memberActor, GetAll).mapTo[List[Member]]
+              val result = Await.result(resultGetAll, timeout.duration)
               result
             }
           }
-      } ~
-      path(ResourceMap.members) {
-        get {
-          val result: Future[List[Member]] = ask(memberActor, GetAll).mapTo[List[Member]]
-          complete {
-            result
-          }
-        }
       }
 }

@@ -26,7 +26,7 @@ trait Service[T <: AnyRef] {
   def get(id: Any): T
 
   def get(field: String, id: Any): List[T] = {
-    logger.info("Enter get (field, id) method")
+    logger.info(s"Enter get ($field, $id) method")
     dao.findBy(field, id)
   }
 

@@ -20,12 +20,12 @@ class RoleServiceActor extends Actor with ActorLogging {
     case Update(role: Role) =>
       log.debug("Role Actor Update Method")
       sender ! roleService.update(role)
-    case Delete(id: Long) =>
-      log.debug("Role Actor Delete Method")
-      roleService.delete(id)
-    case Get(id: Long) =>
-      log.debug("Role Actor Get Method")
+    case Get(id: Any) =>
+      log.debug(s"Role Actor Get Method $id")
       sender ! roleService.get(id)
+    case Delete(id: Any) =>
+      log.debug(s"Role Actor Delete Method $id")
+      sender ! roleService.delete(id)
     case GetAll =>
       log.debug("Role Actor GetAll Method")
       sender ! roleService.getAll

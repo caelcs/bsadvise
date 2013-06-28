@@ -16,10 +16,10 @@ class MemberServiceActor extends Actor with ActorLogging {
     case Update(member: Member) =>
       log.debug("Update Service Actor")
       sender ! memberService.update(member)
-    case Delete(id: Long) =>
+    case Delete(id: Any) =>
       log.debug("Delete Service Actor")
       memberService.delete(id)
-    case Get(id: Long) =>
+    case Get(id: Any) =>
       log.debug("Get Service Actor")
       sender ! memberService.get(id)
   }

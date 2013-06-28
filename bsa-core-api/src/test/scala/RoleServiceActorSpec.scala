@@ -2,10 +2,16 @@ import akka.actor.ActorSystem
 import akka.testkit.{ ImplicitSender, TestKit }
 import ar.com.caeldev.api.CommonConcurrentFeature
 import ar.com.caeldev.bsacore.domain.Role
-import ar.com.caeldev.core.ActorOperations.{ Update, Delete, Add, GetAll }
+import ar.com.caeldev.bsacore.domain.Role
+import ar.com.caeldev.core.ActorOperations._
+import ar.com.caeldev.core.ActorOperations.Add
+import ar.com.caeldev.core.ActorOperations.Delete
+import ar.com.caeldev.core.ActorOperations.GetAll
+import ar.com.caeldev.core.ActorOperations.Update
 import ar.com.caeldev.core.CoreActors
 import org.specs2.mutable.SpecificationLike
 import akka.pattern.ask
+import scala.concurrent.Await
 
 class RoleServiceActorSpec extends TestKit(ActorSystem()) with ImplicitSender with SpecificationLike with CoreActors with CommonConcurrentFeature {
 
@@ -13,20 +19,11 @@ class RoleServiceActorSpec extends TestKit(ActorSystem()) with ImplicitSender wi
 
   "RoleActor should" >> {
 
-    /*"Should persist a new Role " in {
-      val role1: Role = new Role(1000, "test1000")
-      val resultAdd = ask(roleActor, Add(role1)).mapTo[Role]
-      val result = Await.result(resultAdd, timeout.duration)
-      println(result)
-      ask(roleActor, Delete(role1.id))
-      success
-    }*/
-
     "persist a new Role " in {
       val role1: Role = new Role(1000, "test1000")
       roleActor ! Add(role1)
       expectMsgType[Role]
-      //roleActor ? Delete(role1.id)
+      roleActor ? Delete(role1.id)
       success
     }
 
@@ -48,8 +45,8 @@ class RoleServiceActorSpec extends TestKit(ActorSystem()) with ImplicitSender wi
       roleActor ! Add(role1)
       expectMsgType[Role]
 
-      roleActor ! GetAll
-      expectMsgType[List[Role]]
+      roleActor ! Get(role1.id)
+      expectMsgType[Role]
 
       roleActor ? Delete(role1.id)
       success

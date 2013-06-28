@@ -33,7 +33,7 @@ class RoleService(implicit val mot: Manifest[Role]) extends Service[Role] with V
   }
 
   def get(id: Any): Role = {
-    logger.info("Enter Get method")
+    logger.info(s"Enter Get method id: $id")
     dao.findById(id)
   }
 
