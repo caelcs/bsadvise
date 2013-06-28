@@ -20,7 +20,6 @@ class MemberService(memberActor: ActorRef)(implicit executionContext: ExecutionC
       path(ResourceMap.member) {
         entity(as[Member]) {
           member =>
-            println("Post - MemberService")
             val resultAdd = ask(memberActor, Add(member)).mapTo[Member]
             val result = Await.result(resultAdd, timeout.duration)
             complete {
@@ -33,7 +32,6 @@ class MemberService(memberActor: ActorRef)(implicit executionContext: ExecutionC
         path(ResourceMap.member) {
           entity(as[Member]) {
             member =>
-              println("Put - MemberService")
               val resultPut = ask(memberActor, Update(member)).mapTo[Member]
               val result = Await.result(resultPut, timeout.duration)
               complete {
@@ -46,7 +44,6 @@ class MemberService(memberActor: ActorRef)(implicit executionContext: ExecutionC
         path(ResourceMap.member / IntNumber) { id =>
           memberActor ? Delete(id)
           complete {
-            println("Delete - MemberService")
             StatusCodes.Success
           }
         }
@@ -54,7 +51,6 @@ class MemberService(memberActor: ActorRef)(implicit executionContext: ExecutionC
       get {
         path(ResourceMap.member / IntNumber) { id =>
           complete {
-            println("Get - MemberService")
             val resultGet = ask(memberActor, Get(id)).mapTo[Member]
             val result = Await.result(resultGet, timeout.duration)
             result
@@ -62,7 +58,6 @@ class MemberService(memberActor: ActorRef)(implicit executionContext: ExecutionC
         } ~
           path(ResourceMap.members) {
             complete {
-              println("GetAll - MemberService")
               val resultGetAll = ask(memberActor, GetAll).mapTo[List[Member]]
               val result = Await.result(resultGetAll, timeout.duration)
               result
