@@ -2,33 +2,32 @@ package ar.com.caeldev.core
 
 import akka.actor.{ ActorLogging, Actor }
 import ar.com.caeldev.core.ActorOperations._
-import ar.com.caeldev.bsacore.domain.Member
-import ar.com.caeldev.bsacore.services.{ MemberService, Service }
+import ar.com.caeldev.bsacore.services.{ GroupService, Service }
 import ar.com.caeldev.core.ActorOperations.Get
 import ar.com.caeldev.core.ActorOperations.Add
-import ar.com.caeldev.bsacore.domain.Member
+import ar.com.caeldev.bsacore.domain.Group
 import ar.com.caeldev.core.ActorOperations.Delete
 import ar.com.caeldev.core.ActorOperations.Update
 
-class MemberServiceActor extends Actor with ActorLogging {
+class GroupServiceActor extends Actor with ActorLogging {
 
-  val memberService: Service[Member] = new MemberService()
+  val groupService: Service[Group] = new GroupService()
 
   def receive = {
-    case Add(member: Member) =>
+    case Add(group: Group) =>
       log.debug("Add Service Actor")
-      sender ! memberService.add(member)
-    case Update(member: Member) =>
+      sender ! groupService.add(group)
+    case Update(group: Group) =>
       log.debug("Update Service Actor")
-      sender ! memberService.update(member)
+      sender ! groupService.update(group)
     case Delete(id: Any) =>
       log.debug("Delete Service Actor")
-      sender ! memberService.delete(id)
+      sender ! groupService.delete(id)
     case Get(id: Any) =>
       log.debug("Get Service Actor")
-      sender ! memberService.get(id)
+      sender ! groupService.get(id)
     case GetAll =>
       log.debug("GetAll Service Actor")
-      sender ! memberService.getAll
+      sender ! groupService.getAll
   }
 }

@@ -25,6 +25,8 @@ trait CoreActors {
 
   val roleActor = system.actorOf(Props[RoleServiceActor])
   val memberActor = system.actorOf(Props[MemberServiceActor])
+  val groupActor = system.actorOf(Props[GroupServiceActor])
+  val notificationActor = system.actorOf(Props[NotificationServiceActor])
 
 }
 

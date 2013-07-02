@@ -70,10 +70,12 @@ object BuildSettings {
     organization := buildOrganization,
     version := buildVersion,
     scalaVersion := buildScalaVersion,
+    fork := true,
     shellPrompt := ShellPrompt.buildShellPrompt,
     parallelExecution in Test := false,
     testFrameworks += TestFrameworks.ScalaTest,
     resolvers ++= Seq(typeSafeRepo, typeSafeSnapsRepo, oss, ossSnaps, sprayResp),
+    concurrentRestrictions in Global += Tags.limit(Tags.Test, 1),
     scalacOptions ++= Seq("-deprecation", "-unchecked"),
     crossScalaVersions := Seq("2.10.0")
   )

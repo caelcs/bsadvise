@@ -15,7 +15,7 @@ class MemberService(implicit val mot: Manifest[Member]) extends Service[Member] 
   }
 
   def delete(id: Any) {
-    logger.info("Enter Delete method")
+    logger.info(s"Enter Delete method id: $id")
     val entityToDelete: Member = dao.findById(id)
     validate(entityToDelete, Operation.delete)
     catcher {
@@ -33,7 +33,7 @@ class MemberService(implicit val mot: Manifest[Member]) extends Service[Member] 
   }
 
   def get(id: Any): Member = {
-    logger.info("Enter Get method")
+    logger.info(s"Enter Get method id: $id")
     dao.findById(id)
   }
 

@@ -15,7 +15,7 @@ class RoleService(implicit val mot: Manifest[Role]) extends Service[Role] with V
   }
 
   def delete(id: Any) {
-    logger.info("Enter Delete method")
+    logger.info(s"Enter Delete method id: $id")
     val entityToDelete: Role = dao.findById(id)
     validate(entityToDelete, Operation.delete)
     catcher {

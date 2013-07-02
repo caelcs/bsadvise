@@ -12,12 +12,14 @@ class NotificationService(implicit val mot: Manifest[Notification]) extends Serv
     logger.info("Enter Add method")
     validate(entity, Operation.add)
     dao.save(entity)
+    logger.info("Enter To notify")
     notify(entity)
+    logger.info("retrieving Notification")
     dao.findById(entity.id)
   }
 
   def delete(id: Any) {
-    logger.info("Enter Delete method")
+    logger.info(s"Enter Delete method id: $id")
     val entityToDelete: Notification = dao.findById(id)
     validate(entityToDelete, Operation.delete)
     catcher {
@@ -31,7 +33,7 @@ class NotificationService(implicit val mot: Manifest[Notification]) extends Serv
   }
 
   def get(id: Any): Notification = {
-    logger.info("Enter Get method")
+    logger.info(s"Enter Get method id: $id")
     dao.findById(id)
   }
 

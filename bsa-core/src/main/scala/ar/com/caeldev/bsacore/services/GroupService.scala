@@ -3,7 +3,6 @@ package ar.com.caeldev.bsacore.services
 import ar.com.caeldev.bsacore.domain.Group
 import ar.com.caeldev.bsacore.validations.rules.{ MemberExists, NotEmpty }
 import ar.com.caeldev.bsacore.validations.{ Operation, Validation, Rule }
-import org.slf4j.LoggerFactory
 
 class GroupService(implicit val mot: Manifest[Group]) extends Service[Group] with Validation[Group] {
 
@@ -15,7 +14,7 @@ class GroupService(implicit val mot: Manifest[Group]) extends Service[Group] wit
   }
 
   def delete(id: Any) {
-    logger.info("Enter Delete method")
+    logger.info(s"Enter Delete method id: $id")
     val entityToDelete: Group = dao.findById(id)
     validate(entityToDelete, Operation.delete)
 
@@ -39,7 +38,7 @@ class GroupService(implicit val mot: Manifest[Group]) extends Service[Group] wit
   }
 
   def get(id: Any): Group = {
-    logger.info("Enter Get method")
+    logger.info(s"Enter Get method id: $id")
     dao.findById(id)
   }
 
