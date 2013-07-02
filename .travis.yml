@@ -14,3 +14,6 @@ jdk:
   - oraclejdk7
 services:
   - mongodb
+
+before_script:
+  - mongo bsacore-test --eval 'db.dropDatabase();'
