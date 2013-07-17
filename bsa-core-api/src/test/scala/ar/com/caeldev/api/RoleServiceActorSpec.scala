@@ -59,7 +59,7 @@ class RoleServiceActorSpec extends TestKit(ActorSystem()) with ImplicitSender wi
       assert(resultRole === role1)
 
       val resultRoleGetAll = Await.result(roleActor ? GetAll, timeout.duration)
-      assert(resultRoleGetAll.asInstanceOf[List[Role]].find(x => x === role1).size === 1)
+      assert(resultRoleGetAll.asInstanceOf[List[Role]].find(x => x.id == role1.id).size === 1)
 
       Await.result(roleActor ? Delete(role1.id), timeout.duration)
       success
