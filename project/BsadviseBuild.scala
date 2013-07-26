@@ -17,6 +17,7 @@
  *
  */
 
+import com.typesafe.startscript.StartScriptPlugin
 import sbt._
 import Keys._
 import sbtassembly.Plugin._
@@ -39,7 +40,7 @@ object BsadviseBuild extends Build {
     settings = buildSettings ++ Seq(
       publishArtifact in (Compile, packageBin) := false, 
       publishArtifact in (Compile, packageDoc) := false, 
-      publishArtifact in (Compile, packageSrc) := false 
+      publishArtifact in (Compile, packageSrc) := false
     ),
     aggregate = Seq(bsacore, bsacoreapi)
   )
@@ -47,7 +48,10 @@ object BsadviseBuild extends Build {
   lazy val bsacore = Project(
     id = "bsa-core",
     base = file("bsa-core"),
-    settings = buildSettings ++ Seq(libraryDependencies ++= coreDeps)
+    settings = buildSettings ++ Seq(
+      libraryDependencies ++= coreDeps,
+      StartScriptPlugin.stage in Compile := Unit
+    )
   )
 
   lazy val bsacoreapi = Project(
@@ -66,7 +70,7 @@ object BuildSettings {
   val buildVersion = "0.1.0.-SNAPSHOT"
   val buildScalaVersion = "2.10.2"
 
-  val buildSettings = Defaults.defaultSettings ++ Format.settings ++ Publish.settings ++ net.virtualvoid.sbt.graph.Plugin.graphSettings ++ Revolver.settings ++ Seq(
+  val buildSettings = Defaults.defaultSettings ++ Format.settings ++ Publish.settings ++ net.virtualvoid.sbt.graph.Plugin.graphSettings ++ Revolver.settings ++ StartScriptPlugin.startScriptForClassesSettings ++ Seq(
     organization := buildOrganization,
     version := buildVersion,
     scalaVersion := buildScalaVersion,
