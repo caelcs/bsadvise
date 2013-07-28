@@ -1,1 +1,0 @@
-web: bsa-core-api/target/start Web

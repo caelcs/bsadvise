@@ -22,6 +22,6 @@ trait Api extends RouteConcatenation {
       new GroupService(groupActor).route ~
       new NotificationService(notificationActor).route
 
-  val rootService = system.actorOf(Props(new RoutedHttpService(routes)))
+  val serviceActor = system.actorOf(Props(new RoutedHttpService(routes)))
 
 }

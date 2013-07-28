@@ -17,12 +17,12 @@
  *
  */
 
-import com.typesafe.startscript.StartScriptPlugin
 import sbt._
-import Keys._
-import sbtassembly.Plugin._
-import sbtassembly.Plugin.AssemblyKeys._
+import sbt.Keys._
 import scala._
+import com.earldouglas.xsbtwebplugin._
+import WebPlugin._
+import scala.Some
 
 object BsadviseBuild extends Build {
 
@@ -32,7 +32,7 @@ object BsadviseBuild extends Build {
   val testDeps = Seq(scalatest)
   val testApiDeps = Seq(sprayTestingkit, akkaTestkit, specs2) ++ testDeps
   val coreDeps = Seq(casbah, json4sNative, json4sExt, jodaTime, logback, akkaSlf4j, salat, config, commonsMail) ++ testDeps
-  val apiDeps =  Seq(sprayCan, sprayRouting, akkaActor, sprayHttpx) ++ testApiDeps
+  val apiDeps =  Seq(sprayCan, sprayServlet, sprayRouting, akkaActor, sprayHttpx) ++ testApiDeps
 
   lazy val bsadvise = Project(
     id = "bsadvise",
@@ -49,16 +49,23 @@ object BsadviseBuild extends Build {
     id = "bsa-core",
     base = file("bsa-core"),
     settings = buildSettings ++ Seq(
-      libraryDependencies ++= coreDeps,
-      StartScriptPlugin.stage in Compile := Unit
+      libraryDependencies ++= coreDeps
     )
   )
 
   lazy val bsacoreapi = Project(
     id = "bsa-core-api",
     base = file("bsa-core-api"),
-    settings = buildSettings ++ assemblySettings ++ Package.baseAssemblySettings ++ Seq(libraryDependencies ++= apiDeps)
+    settings = buildSettings ++ seq(webSettings :_*) ++ rootSettings ++ Seq(libraryDependencies ++= apiDeps)
   ) dependsOn(bsacore)
+
+  lazy val rootSettings =  Seq(
+    libraryDependencies ++= Seq(
+      "org.eclipse.jetty" % "jetty-webapp" % "7.3.0.v20110203" % "container",
+      "org.eclipse.jetty" % "jetty-plus" % "7.3.0.v20110203" % "container",
+      "javax.servlet" % "servlet-api" % "2.5" % "provided"
+    )
+  )
 }
 
 object BuildSettings {
@@ -70,7 +77,7 @@ object BuildSettings {
   val buildVersion = "0.1.0.-SNAPSHOT"
   val buildScalaVersion = "2.10.2"
 
-  val buildSettings = Defaults.defaultSettings ++ Format.settings ++ Publish.settings ++ net.virtualvoid.sbt.graph.Plugin.graphSettings ++ Revolver.settings ++ StartScriptPlugin.startScriptForClassesSettings ++ Seq(
+  val buildSettings = Defaults.defaultSettings ++ Format.settings ++ Publish.settings ++ net.virtualvoid.sbt.graph.Plugin.graphSettings ++ Revolver.settings ++ Seq(
     organization := buildOrganization,
     version := buildVersion,
     scalaVersion := buildScalaVersion,
@@ -113,26 +120,6 @@ object Format {
       setPreference(SpaceInsideBrackets, false).
       setPreference(SpacesWithinPatternBinders, true)
   }
-}
-
-object AssemblyKeys {
-
-  val jarName = SettingKey[String]("jar-name")
-
-  def assemblyExcludedFiles(base: Seq[File]): Seq[File] =
-    ((base / "readme.txt") ---
-      (base /".DS_Store")).get
-}
-
-
-object Package {
-  import AssemblyKeys._
-
-  lazy val baseAssemblySettings: Seq[sbt.Project.Setting[_]] = Seq(
-    jarName in assembly <<= (name, version) { (name, version) => name + "-assembly-" + version + ".jar"},
-    excludedFiles in assembly := assemblyExcludedFiles _,
-    test in assembly := {}
-  )
 }
 
 object Publish {
@@ -179,12 +166,15 @@ object Dependencies {
   val commonsMail = "org.apache.commons" % "commons-email" % "1.3.1"
   val sprayCan = "io.spray" % "spray-can" % "1.2-M8"
   val sprayRouting = "io.spray" % "spray-routing" % "1.2-M8"
+  val sprayServlet = "io.spray" % "spray-servlet" % "1.2-M8"
   val sprayTestingkit = "io.spray" % "spray-testkit" % "1.2-M8"
   val sprayHttpx = "io.spray" %  "spray-httpx" % "1.2-M8"
   val akkaSlf4j  = "com.typesafe.akka" %% "akka-slf4j" % "2.2.0-RC1"
   val akkaActor = "com.typesafe.akka" %% "akka-actor" % "2.2.0-RC1"
   val akkaTestkit = "com.typesafe.akka" %% "akka-testkit" % "2.2.0-RC1"
   val specs2 = "org.specs2" %% "specs2" % "1.14" % "test"
+  val jetty = "org.mortbay.jetty" % "jetty" % "6.1.26" % "container;provided"
+  val javaxServlet = "javax.servlet" % "servlet-api" % "2.5" % "container;provided"
 
 }
 

@@ -1,7 +1,5 @@
 package ar.com.caeldev.web
 
-import akka.io.IO
-import spray.can.Http
 import ar.com.caeldev.api.Api
 import ar.com.caeldev.core.{ CoreActors, Core }
 
@@ -17,7 +15,5 @@ import ar.com.caeldev.core.{ CoreActors, Core }
  */
 trait Web {
   this: Api with CoreActors with Core =>
-
-  IO(Http)(system) ! Http.Bind(rootService, "0.0.0.0", port = 8080)
 
 }
